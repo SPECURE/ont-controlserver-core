@@ -1,0 +1,24 @@
+spring:
+  elasticsearch:
+    rest:
+      uris: http://${ELASTICSEARCH}
+    datasource:
+      poolSize: 20
+      minIdle: 1
+      driverClassName: org.mariadb.jdbc.Driver
+      url: jdbc:mysql://${MYSQL_RDS_URI}:${MYSQL_RDS_PORT}/%s?useUnicode=true&characterEncoding=utf8
+      username: ${MYSQL_RDS_USER}
+      password: ${MYSQL_RDS_PASSWORD}
+      tomcat:
+        test-while-idle: true
+        test-on-borrow: true
+        validation-query: SELECT 1
+    jpa:
+      hibernate:
+        ddl-auto: validate
+      show-sql: false
+      database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+
+  auth0:
+    issuer: ${AUTH0_ISSUER}
+    apiAudience: ${AUTH0_API_AUDIENCE}

@@ -23,14 +23,25 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@RequiredArgsConstructor
+
 @Service
 public class MeasurementQosServiceImpl implements MeasurementQosService {
-    private final MeasurementServerRepository measurementServerRepository;
-    private final MeasurementQosRepository measurementQosRepository;
-    private final BasicQosTestService basicQosTestService;
-    private final MeasurementQosMapper measurementQosMapper;
-    private final MeasurementService measurementService;
+
+    private MeasurementServerRepository measurementServerRepository;
+    private MeasurementQosRepository measurementQosRepository;
+    private BasicQosTestService basicQosTestService;
+    private MeasurementQosMapper measurementQosMapper;
+    private MeasurementService measurementService;
+
+    public MeasurementQosServiceImpl(MeasurementServerRepository measurementServerRepository,
+                                     MeasurementQosRepository measurementQosRepository, BasicQosTestService basicQosTestService,
+                                     MeasurementQosMapper measurementQosMapper, MeasurementService measurementService) {
+        this.measurementServerRepository = measurementServerRepository;
+        this.measurementQosRepository = measurementQosRepository;
+        this.basicQosTestService = basicQosTestService;
+        this.measurementQosMapper = measurementQosMapper;
+        this.measurementService = measurementService;
+    }
 
     @Override
     public void saveMeasurementQos(MeasurementQosRequest measurementQosRequest) {
@@ -38,7 +49,7 @@ public class MeasurementQosServiceImpl implements MeasurementQosService {
         String token = measurementQos.getTestToken();
         var measurement = measurementService
                 .getMeasurementByToken(token)
-                .orElseThrow(()-> new MeasurementNotFoundByUuidException(token));
+                .orElseThrow(() -> new MeasurementNotFoundByUuidException(token));
         if (!Objects.isNull(measurement.getAdHocCampaign())) {
             measurementQos.setAdHocCampaign(measurement.getAdHocCampaign());
         }
@@ -50,7 +61,7 @@ public class MeasurementQosServiceImpl implements MeasurementQosService {
     public MeasurementQosParametersResponse getQosParameters(MeasurementQosParametersRequest measurementQosParametersRequest) {
 
         Optional<MeasurementServer> measurementServer = measurementServerRepository.findByClientUUID(measurementQosParametersRequest.getUuid());
-        if(measurementServer.isEmpty()) {
+        if (measurementServer.isEmpty()) {
             throw new QoSMeasurementServerNotFoundByUuidException(measurementQosParametersRequest.getUuid());
         }
 

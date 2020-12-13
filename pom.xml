@@ -90,6 +90,34 @@
             <artifactId>sah-security</artifactId>
             <version>${sah-security.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.blueconic</groupId>
+            <artifactId>browscap-java</artifactId>
+            <version>1.3.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>1.3.1.Final</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-csv</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.sentry</groupId>
+            <artifactId>sentry</artifactId>
+            <version>1.7.30</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.sentry</groupId>
+            <artifactId>sentry-spring</artifactId>
+            <version>1.7.30</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>

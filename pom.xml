@@ -84,12 +84,6 @@
             <scope>provided</scope>
         </dependency>
 
-
-        <dependency>
-            <groupId>com.specture</groupId>
-            <artifactId>sah-security</artifactId>
-            <version>${sah-security.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.blueconic</groupId>
             <artifactId>browscap-java</artifactId>
@@ -122,10 +116,7 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>

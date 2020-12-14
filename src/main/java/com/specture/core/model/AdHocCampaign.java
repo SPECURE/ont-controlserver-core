@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.specture.core.model.Provider;
 import com.specture.core.enums.AdHocCampaignStatus;
 import lombok.*;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -11,6 +12,7 @@ import java.sql.Timestamp;
 
 @Builder
 @Entity
+@Component
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

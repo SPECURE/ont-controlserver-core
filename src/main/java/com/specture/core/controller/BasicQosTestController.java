@@ -11,6 +11,7 @@ import com.specture.core.utils.PageableUtil;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 @RequiredArgsConstructor
 @RestController
 public class BasicQosTestController {
+    @Qualifier("basicQosTest")
     private final BasicQosTestService basicQosTestService;
 
     @PageableCase(value = Case.LOWERCASE)

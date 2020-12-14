@@ -9,6 +9,7 @@ import com.specture.core.service.BasicQosTestService;
 import com.specture.core.service.MeasurementServerService;
 import com.specture.core.service.MeasurementService;
 import com.specture.core.repository.BasicQosTestRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-@Service
+@Service("basicQosTest")
+@Primary
 public class BasicQosTestServiceImpl implements BasicQosTestService {
 
     private final BasicQosTestRepository basicQosTestRepository;

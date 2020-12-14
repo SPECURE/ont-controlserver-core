@@ -1,5 +1,6 @@
 package com.specture.core.service.impl;
 
+import com.specture.core.config.MeasurementServerConfig;
 import com.specture.core.constant.ErrorMessage;
 import com.specture.core.constant.MeasurementServerConstants;
 import com.specture.core.enums.MeasurementStatus;
@@ -10,6 +11,7 @@ import com.specture.core.mapper.MeasurementMapper;
 import com.specture.core.model.Measurement;
 import com.specture.core.model.MeasurementServer;
 import com.specture.core.model.TimeSlot;
+import com.specture.core.model.internal.DataForMeasurementRegistration;
 import com.specture.core.repository.BasicTestRepository;
 import com.specture.core.repository.MeasurementRepository;
 import com.specture.core.request.MeasurementRequest;
@@ -17,9 +19,6 @@ import com.specture.core.response.MeasurementHistoryResponse;
 import com.specture.core.response.MeasurementRegistrationResponse;
 import com.specture.core.response.MeasurementStatsForGeneralUserPortalResponse;
 import com.specture.core.service.MeasurementService;
-import com.specture.core.config.MeasurementServerConfig;
-import com.specture.core.model.internal.DataForMeasurementRegistration;
-
 import com.specture.core.service.UserAgentExtractService;
 import com.specture.core.service.digger.DiggerService;
 import com.specture.core.utils.HeaderExtrudeUtil;
@@ -48,7 +47,7 @@ public class MeasurementServiceImpl implements MeasurementService {
     private final DiggerService diggerService;
     private final UserAgentExtractService userAgentExtractService;
     private final BasicTestRepository basicTestRepository;
-    private Clock clock = Clock.systemUTC();//todo to bean
+    private Clock clock = Clock.systemUTC(); //todo to bean
 
     @Override
     public void setClock(Clock clock) {

@@ -76,7 +76,11 @@
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.specture</groupId>
+            <artifactId>sah-security</artifactId>
+            <version>${sah-security.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>

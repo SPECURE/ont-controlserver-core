@@ -66,25 +66,18 @@ public class MultiTenantManager {
         String tenant = clientTenantConfig.getClientTenantMapping().get(client);
 
         if (Objects.isNull(tenant) || !tenantDataSources.containsKey(client)) {
-//            log.info(String.format("SET: Nullable client is %s", client));
             client = clientTenantConfig.getDefaultTenant();
-//            log.info(String.format("SET: Nullable tenant is %s", tenant));
-//            log.info(String.format("SET: Nullable client set to %s", client));
         }
         currentTenant.set(client);
-//        log.info(String.format("SET: current tenant is %s", tenant));
-//        log.info(String.format("SET: current client is %s", client));
     }
 
     public String getCurrentTenant() {
         String tenant = Optional.ofNullable(currentTenant.get())
                 .orElse(clientTenantConfig.getDefaultTenant());
-//        log.info("GET: current tenant is " + tenant);
         return tenant;
     }
 
     public String getCurrentTenantBasicIndex() {
-//        log.info("Tenant: return ES basicIndex; basicTenantIndex is {}; current tenant is {}", elasticIndexConfig.getBasicTenantIndexes().get(getCurrentTenant()), getCurrentTenant());
         return elasticIndexTenantConfig.getBasicTenantIndexes().get(getCurrentTenant());
     }
 

@@ -2,11 +2,9 @@ package com.specture.core.mapper;
 
 import com.specture.core.model.MeasurementServerDescription;
 import com.specture.core.request.MeasurementServerDescriptionRequest;
-import com.specture.core.response.MeasurementServerDescriptionResponse;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface MeasurementServerDescriptionMapper {
     MeasurementServerDescription measurementServerDescriptionRequestToMeasurementServerDescription(MeasurementServerDescriptionRequest measurementServerDescriptionRequest);
-    MeasurementServerDescriptionResponse measurementServerDescriptionToMeasurementServerDescriptionResponse(MeasurementServerDescription measurementServerDescription);
 }

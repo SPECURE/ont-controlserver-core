@@ -6,11 +6,8 @@ import com.specture.core.model.internal.DataForMeasurementRegistration;
 import com.specture.core.request.MeasurementRequest;
 import com.specture.core.response.MeasurementHistoryResponse;
 import com.specture.core.response.MeasurementRegistrationResponse;
-import com.specture.core.response.MeasurementStatsForGeneralUserPortalResponse;
 
 import java.time.Clock;
-import java.time.DayOfWeek;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

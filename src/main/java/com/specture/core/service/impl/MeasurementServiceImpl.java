@@ -12,12 +12,10 @@ import com.specture.core.model.Measurement;
 import com.specture.core.model.MeasurementServer;
 import com.specture.core.model.TimeSlot;
 import com.specture.core.model.internal.DataForMeasurementRegistration;
-import com.specture.core.repository.BasicTestRepository;
 import com.specture.core.repository.MeasurementRepository;
 import com.specture.core.request.MeasurementRequest;
 import com.specture.core.response.MeasurementHistoryResponse;
 import com.specture.core.response.MeasurementRegistrationResponse;
-import com.specture.core.response.MeasurementStatsForGeneralUserPortalResponse;
 import com.specture.core.service.MeasurementService;
 import com.specture.core.service.UserAgentExtractService;
 import com.specture.core.service.digger.DiggerService;
@@ -30,11 +28,13 @@ import org.springframework.stereotype.Service;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.Timestamp;
-import java.time.*;
-import java.util.*;
+import java.time.Clock;
+import java.time.Instant;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-import static java.time.temporal.TemporalAdjusters.firstDayOfMonth;
-import static java.time.temporal.TemporalAdjusters.firstDayOfYear;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -46,8 +46,7 @@ public class MeasurementServiceImpl implements MeasurementService {
     private final MeasurementServerConfig measurementServerConfig;
     private final DiggerService diggerService;
     private final UserAgentExtractService userAgentExtractService;
-    private final BasicTestRepository basicTestRepository;
-    private Clock clock = Clock.systemUTC(); //todo to bean
+    private Clock clock; //todo to bean
 
     @Override
     public void setClock(Clock clock) {
@@ -67,7 +66,7 @@ public class MeasurementServiceImpl implements MeasurementService {
         Measurement afterMeasure = measurementMapper.measurementRequestToMeasurement(measurementRequest);
         var registeredMeasurement = measurementRepository
                 .findByToken(afterMeasure.getToken())
-                .orElseThrow(()-> new MeasurementNotFoundByUuidException(afterMeasure.getToken()));
+                .orElseThrow(() -> new MeasurementNotFoundByUuidException(afterMeasure.getToken()));
 
         Long id = registeredMeasurement.getId();
 
@@ -87,14 +86,14 @@ public class MeasurementServiceImpl implements MeasurementService {
         afterMeasure.setStatus(MeasurementStatus.FINISHED);
         afterMeasure.setAdHocCampaign(registeredMeasurement.getAdHocCampaign());
 
-        if(afterMeasure.getPings() != null) {
-            afterMeasure.getPings().forEach( ping -> ping.setMeasurement(afterMeasure));
+        if (afterMeasure.getPings() != null) {
+            afterMeasure.getPings().forEach(ping -> ping.setMeasurement(afterMeasure));
         }
-        if(afterMeasure.getGeoLocations() != null) {
-            afterMeasure.getGeoLocations().forEach( geoLocation -> geoLocation.setMeasurement(afterMeasure));
+        if (afterMeasure.getGeoLocations() != null) {
+            afterMeasure.getGeoLocations().forEach(geoLocation -> geoLocation.setMeasurement(afterMeasure));
         }
-        if(afterMeasure.getSpeedDetail() != null) {
-            afterMeasure.getSpeedDetail().forEach( speedDetail -> speedDetail.setMeasurement(afterMeasure));
+        if (afterMeasure.getSpeedDetail() != null) {
+            afterMeasure.getSpeedDetail().forEach(speedDetail -> speedDetail.setMeasurement(afterMeasure));
         }
         measurementRepository.save(afterMeasure);
         return afterMeasure;
@@ -111,7 +110,7 @@ public class MeasurementServiceImpl implements MeasurementService {
             if (asn != 0L) {
                 clientProviderName = diggerService.getProviderByASN(asn);
             }
-        } catch (UnknownHostException e){
+        } catch (UnknownHostException e) {
             log.error("asn detection error");
         }
 
@@ -124,7 +123,7 @@ public class MeasurementServiceImpl implements MeasurementService {
         String testToken = MeasurementCalculatorUtil.getToken(measurementServer.getSecretKey(), testUuid, timeSlot.getSlot());
         String device = dataForMeasurementRegistration.getDeviceOrProbeId();
         if (device == null) {
-            String userAgentHeader =  HeaderExtrudeUtil.getUserAgent(headers);
+            String userAgentHeader = HeaderExtrudeUtil.getUserAgent(headers);
             device = userAgentExtractService.getBrowser(userAgentHeader);
         }
 
@@ -145,7 +144,7 @@ public class MeasurementServiceImpl implements MeasurementService {
                 .platform(Platform.UNKNOWN)
                 .build();
 
-        if(dataForMeasurementRegistration.getIsOnNet() != null) {
+        if (dataForMeasurementRegistration.getIsOnNet() != null) {
             ServerType serverType = dataForMeasurementRegistration.getIsOnNet() ? ServerType.ON_NET : ServerType.OFF_NET;
             measurement.setServerType(serverType.toString());
         }
@@ -175,12 +174,12 @@ public class MeasurementServiceImpl implements MeasurementService {
 
     public TimeSlot getTimeSlot(long now) {
 
-        int slot = Math.toIntExact( now / 1000);
+        int slot = Math.toIntExact(now / 1000);
         long counter = measurementRepository.countAllByTestSlot(slot);
         int wait = 0;
         long max = measurementServerConfig.getSlotWindow().intValue();
 
-        while (counter >= max){
+        while (counter >= max) {
             slot++;
             wait++;
             counter = measurementRepository.countAllByTestSlot(slot);
@@ -209,61 +208,6 @@ public class MeasurementServiceImpl implements MeasurementService {
     @Override
     public Measurement findByOpenTestUuid(String uuid) {
         return measurementRepository.findByOpenTestUuid(uuid).orElseThrow(() -> new MeasurementNotFoundByUuidException(uuid));
-    }
-
-    @Override
-    public MeasurementStatsForGeneralUserPortalResponse getMeasurementStatsForGeneralUserPortalResponse(ZoneId zoneId, DayOfWeek dayWhenWeekStarts) {
-        Timestamp from;
-
-        // for Timestamp constructor default timezone, important !!
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-        ZoneId utcZoneId = ZoneId.of("UTC");
-        log.info("start measurement start with zoneId={}; dayWhenWeekStart={}", zoneId, dayWhenWeekStarts);
-
-        ZonedDateTime zonedDateTimeNow = ZonedDateTime.of(LocalDateTime.now(this.clock), utcZoneId);
-        ZonedDateTime userNow = zonedDateTimeNow.withZoneSameInstant(zoneId);
-        Timestamp now = Timestamp.valueOf(zonedDateTimeNow.toLocalDateTime());
-        log.info("now={}", now);
-
-        LocalDate nowDate = userNow.toLocalDate();
-        ZonedDateTime userStartDay = ZonedDateTime.of(nowDate.atStartOfDay(), zoneId);
-        ZonedDateTime utcStartDay = userStartDay.withZoneSameInstant(utcZoneId);
-        from = Timestamp.valueOf(utcStartDay.toLocalDateTime());
-        log.info("DAY from={}", from.toInstant());
-
-        long thisDay = basicTestRepository.getAmountOfMeasurementsBetween(from, now );
-
-        DayOfWeek todayDayOfWeek = LocalDateTime.now(this.clock).getDayOfWeek();
-        int delta = todayDayOfWeek.getValue() - dayWhenWeekStarts.getValue();
-        if (delta < 0) {
-            delta += 7;
-        }
-        LocalDate dayStartWeek = utcStartDay.toLocalDate().minusDays(delta);
-        LocalTime timeStartWeek = utcStartDay.toLocalTime();
-        from = Timestamp.valueOf(LocalDateTime.of(dayStartWeek, timeStartWeek));
-        log.info("WEEK from={}", from.toInstant());
-        long thisWeek = basicTestRepository.getAmountOfMeasurementsBetween(from, now);
-
-        LocalDateTime startMonthForUser = userNow.toLocalDate().with(firstDayOfMonth()).atStartOfDay();
-        ZonedDateTime dayStartMonthInUserZone = ZonedDateTime.of(startMonthForUser, zoneId);
-        ZonedDateTime startMonthDateTimeUTC = dayStartMonthInUserZone.withZoneSameInstant(utcZoneId);
-        from = Timestamp.valueOf(startMonthDateTimeUTC.toLocalDateTime());
-        log.info("MONTH from={}", from.toInstant());
-        long thisMonth = basicTestRepository.getAmountOfMeasurementsBetween(from, now);
-
-        LocalDateTime dayStartYearForUser = userNow.toLocalDate().with(firstDayOfYear()).atStartOfDay();
-        ZonedDateTime dayStartYearInUserZone = ZonedDateTime.of(dayStartYearForUser, zoneId);
-        ZonedDateTime startYearUTC = dayStartYearInUserZone.withZoneSameInstant(utcZoneId);
-        from = Timestamp.valueOf(startYearUTC.toLocalDateTime());
-        log.info("YEAR from={}", from.toInstant());
-        long thisYear = basicTestRepository.getAmountOfMeasurementsBetween(from, now);
-
-        return MeasurementStatsForGeneralUserPortalResponse.builder()
-                .today(thisDay)
-                .thisWeek(thisWeek)
-                .thisMonth(thisMonth)
-                .thisYear(thisYear)
-                .build();
     }
 
     @Override

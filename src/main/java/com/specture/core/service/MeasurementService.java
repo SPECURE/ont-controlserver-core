@@ -24,7 +24,6 @@ public interface MeasurementService {
     List<Measurement> findLastMeasurementsForMeasurementServerIds(List<Long> ids);
     MeasurementHistoryResponse getMeasurementDetailByUuid(String uuid);
     Measurement findByOpenTestUuid(String uuid);
-    MeasurementStatsForGeneralUserPortalResponse getMeasurementStatsForGeneralUserPortalResponse(ZoneId zoneId, DayOfWeek dayOfWeek);
     Optional<Measurement> getMeasurementByToken(String token);
     List<Measurement> getLastSuccessfulMeasurementByIds(List<Long> ids);
 }

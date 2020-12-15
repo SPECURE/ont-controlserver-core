@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Service
+@Service("basicMeasurementServerService")
 public class MeasurementServerServiceImpl implements MeasurementServerService {
 
     private final MeasurementServerRepository measurementServerRepository;

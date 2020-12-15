@@ -11,7 +11,7 @@ import java.util.Map;
 @Setter
 @Configuration
 @ConfigurationProperties("elastic-index")
-public class ElasticIndexConfig {
+public class ElasticIndexTenantConfig {
     private Map<String, String> basicTenantIndexes;
     private Map<String, String> basicQosTenantIndexes;
 }

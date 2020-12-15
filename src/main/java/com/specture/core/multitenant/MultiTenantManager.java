@@ -1,7 +1,7 @@
 package com.specture.core.multitenant;
 
 import com.specture.core.config.ClientTenantConfig;
-import com.specture.core.config.ElasticIndexConfig;
+import com.specture.core.config.ElasticIndexTenantConfig;
 import io.micrometer.core.instrument.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -26,11 +26,11 @@ public class MultiTenantManager {
 
     private ConnectionManager connectionManager;
     private AbstractRoutingDataSource multiTenantDataSource;
-    private ElasticIndexConfig elasticIndexConfig;
+    private ElasticIndexTenantConfig elasticIndexTenantConfig;
     private ClientTenantConfig clientTenantConfig;
 
-    public MultiTenantManager(ElasticIndexConfig elasticIndexConfig, ConnectionManager connectionManager, ClientTenantConfig clientTenantConfig) {
-        this.elasticIndexConfig = elasticIndexConfig;
+    public MultiTenantManager(ElasticIndexTenantConfig elasticIndexTenantConfig, ConnectionManager connectionManager, ClientTenantConfig clientTenantConfig) {
+        this.elasticIndexTenantConfig = elasticIndexTenantConfig;
         this.connectionManager = connectionManager;
         this.clientTenantConfig = clientTenantConfig;
     }
@@ -62,13 +62,6 @@ public class MultiTenantManager {
         return tenantId;
     }
 
-    public String getCurrentTenant() {
-        String tenant = Optional.ofNullable(currentTenant.get())
-            .orElse(clientTenantConfig.getDefaultTenant());
-//        log.info("GET: current tenant is " + tenant);
-        return tenant;
-    }
-
     public void setCurrentTenant(String client) {
         String tenant = clientTenantConfig.getClientTenantMapping().get(client);
 
@@ -83,14 +76,20 @@ public class MultiTenantManager {
 //        log.info(String.format("SET: current client is %s", client));
     }
 
+    public String getCurrentTenant() {
+        String tenant = Optional.ofNullable(currentTenant.get())
+                .orElse(clientTenantConfig.getDefaultTenant());
+//        log.info("GET: current tenant is " + tenant);
+        return tenant;
+    }
+
     public String getCurrentTenantBasicIndex() {
 //        log.info("Tenant: return ES basicIndex; basicTenantIndex is {}; current tenant is {}", elasticIndexConfig.getBasicTenantIndexes().get(getCurrentTenant()), getCurrentTenant());
-        return elasticIndexConfig.getBasicTenantIndexes().get(getCurrentTenant());
+        return elasticIndexTenantConfig.getBasicTenantIndexes().get(getCurrentTenant());
     }
 
     public String getCurrentTenantQosIndex() {
-//        log.info("Tenant: return ES basicQosIndex; basicTenantIndex is {}; current tenant is {}", elasticIndexConfig.getBasicQosTenantIndexes().get(getCurrentTenant()), getCurrentTenant());
-        return elasticIndexConfig.getBasicQosTenantIndexes().get(getCurrentTenant());
+        return elasticIndexTenantConfig.getBasicQosTenantIndexes().get(getCurrentTenant());
     }
 
     public void unload() {

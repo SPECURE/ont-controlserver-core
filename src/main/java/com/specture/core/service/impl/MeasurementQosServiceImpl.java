@@ -24,7 +24,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 
-@Service
+@Service("basicMeasurementQosService")
 public class MeasurementQosServiceImpl implements MeasurementQosService {
 
     private MeasurementServerRepository measurementServerRepository;

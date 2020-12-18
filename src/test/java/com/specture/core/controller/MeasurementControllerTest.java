@@ -67,29 +67,6 @@ public class MeasurementControllerTest {
             .build();
     }
 
-    @Test
-    public void measurementRequest_WhenCalled_ExpectCorrectResponse() throws Exception {
-        final var measurementServerRequest = getDefaultMeasurementServerRequest();
-        final var measurementServer = MeasurementServer.builder().build();
-        final DataForMeasurementRegistration dataForMeasurementRegistration = DataForMeasurementRegistration.builder()
-            .measurementServer(measurementServer)
-            .deviceOrProbeId(DEFAULT_PROBE_ID)
-            .port(DEFAULT_PORT)
-            .build();
-
-        when(measurementServerService.getDataFromProbeMeasurementRegistrationRequest(measurementServerRequest))
-            .thenReturn(dataForMeasurementRegistration);
-        when(measurementService.registerMeasurement(any(), any()))
-            .thenReturn(getDefaultResponse());
-
-        mockMvc.perform(MockMvcRequestBuilders
-            .post(TEST_REQUEST)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtils.convertObjectToJsonBytes(measurementServerRequest))
-        )
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.test_id").isNotEmpty());
-    }
 
     @Test
     public void registerMeasurementForWebClient_WhenCalled_ExpectCorrectResponse() throws Exception {

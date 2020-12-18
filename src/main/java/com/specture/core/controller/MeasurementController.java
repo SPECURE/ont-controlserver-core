@@ -33,12 +33,6 @@ public class MeasurementController {
     private final MeasurementServerService basicMeasurementServerService;
     private final BasicTestService basicTestService;
 
-    @ApiOperation("Return test servers and settings for measurements.")
-    @PostMapping(URIConstants.TEST_REQUEST)
-    public MeasurementRegistrationResponse registrationMeasurement(@Validated @RequestBody MeasurementRegistrationForProbeRequest measurementServerMeasurePrepareRequest, @RequestHeader Map<String, String> headers) {
-        var serverProbeAndPortData = basicMeasurementServerService.getDataFromProbeMeasurementRegistrationRequest(measurementServerMeasurePrepareRequest);
-        return measurementService.registerMeasurement(serverProbeAndPortData, headers);
-    }
 
     @ApiOperation("Return test servers and settings for web client measurements.")
     @PostMapping(URIConstants.TEST_REQUEST_FOR_WEB_CLIENT)

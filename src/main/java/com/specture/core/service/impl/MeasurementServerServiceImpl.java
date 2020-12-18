@@ -50,6 +50,11 @@ public class MeasurementServerServiceImpl implements MeasurementServerService {
     }
 
     @Override
+    public DataForMeasurementRegistration getDataFromProbeMeasurementRegistrationRequest(MeasurementRegistrationForProbeRequest measurementRegistrationForProbeRequest) {
+        return null;
+    }
+
+    @Override
     public DataForMeasurementRegistration getMeasurementServerForWebClient(MeasurementRegistrationForWebClientRequest measurementRegistrationForWebClientRequest) {
 
         // it's only mock

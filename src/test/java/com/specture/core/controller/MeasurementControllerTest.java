@@ -114,68 +114,6 @@ public class MeasurementControllerTest {
     }
 
     @Test
-    public void measurementRequest_WhenNoPort_ExpectBadRequest() throws Exception {
-        final var measurementServerRequestWithoutPort = MeasurementRegistrationForProbeRequest
-            .builder()
-            .client(DEFAULT_CLIENT)
-            .isOnNet(true)
-            .language(DEFAULT_LANGUAGE)
-            .timezone(DEFAULT_TIME_ZONE)
-            .uuid(DEFAULT_UUID)
-            .build();
-
-        mockMvc.perform(MockMvcRequestBuilders
-            .post(TEST_REQUEST)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtils.convertObjectToJsonBytes(measurementServerRequestWithoutPort))
-        )
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.message").value(PORT_NAME_REQUIRED));
-
-        verify(measurementServerService, never()).getDataFromProbeMeasurementRegistrationRequest(any());
-        verify(measurementService, never()).registerMeasurement(any(), any());
-    }
-
-    @Test
-    public void measurementRequest_WhenNoUuid_ExpectBadRequest() throws Exception {
-        final var measurementServerRequestWithoutPort = MeasurementRegistrationForProbeRequest.builder()
-            .isOnNet(true)
-            .client(DEFAULT_CLIENT)
-            .port(DEFAULT_PORT)
-            .language(DEFAULT_LANGUAGE)
-            .timezone(DEFAULT_TIME_ZONE)
-            .build();
-
-        mockMvc.perform(MockMvcRequestBuilders
-            .post(TEST_REQUEST)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content(TestUtils.convertObjectToJsonBytes(measurementServerRequestWithoutPort))
-        )
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.message").value(CLIENT_UUID_REQUIRED));
-
-        verify(measurementServerService, never()).getDataFromProbeMeasurementRegistrationRequest(any());
-        verify(measurementService, never()).registerMeasurement(any(), any());
-    }
-
-    @Test
-    public void measurementRequest_WhenProbePortNotFind_ExpectBadRequest() throws Exception {
-        MeasurementRegistrationForProbeRequest measurementRequest = getDefaultMeasurementServerRequest();
-        String msg = String.format(ErrorMessage.PROBE_PORT_NOT_FOUND, DEFAULT_PORT, DEFAULT_UUID);
-        doThrow(new ProbePortNotFoundException(DEFAULT_PORT, DEFAULT_UUID))
-            .when(measurementServerService)
-            .getDataFromProbeMeasurementRegistrationRequest(any());
-
-        mockMvc.perform(MockMvcRequestBuilders
-            .post(TEST_REQUEST)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content(TestUtils.convertObjectToJsonBytes(measurementRequest))
-        )
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.message").value(msg));
-    }
-
-    @Test
     public void saveTestResult_WhenCalled_ExpectCorrectResponse() throws Exception {
         var measurementRequest = MeasurementRequest.builder()
             .clientUuid(DEFAULT_UUID)

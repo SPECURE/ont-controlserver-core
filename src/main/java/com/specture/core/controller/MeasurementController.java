@@ -4,12 +4,10 @@ import com.specture.core.config.MeasurementServerConfig;
 import com.specture.core.constant.MeasurementServerConstants;
 import com.specture.core.constant.URIConstants;
 import com.specture.core.request.MeasurementQosParametersRequest;
-import com.specture.core.request.MeasurementQosRequest;
 import com.specture.core.request.MeasurementRegistrationForAdminRequest;
 import com.specture.core.request.MeasurementRegistrationForWebClientRequest;
 import com.specture.core.response.MeasurementHistoryResponse;
 import com.specture.core.response.MeasurementRegistrationResponse;
-import com.specture.core.response.MeasurementResultRMBTClientResponse;
 import com.specture.core.response.measurement.qos.response.MeasurementQosParametersResponse;
 import com.specture.core.service.BasicTestService;
 import com.specture.core.service.MeasurementQosService;
@@ -22,7 +20,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -56,17 +53,6 @@ public class MeasurementController {
         return response;
     }
 
-    @ApiOperation("Save QoS measurements results.")
-    @PostMapping(URIConstants.MEASUREMENT_RESULT_QOS)
-    public MeasurementResultRMBTClientResponse saveMeasurementQOSResult(@Validated @RequestBody MeasurementQosRequest measurementQosRequest) {
-        final String historyUrl = measurementServerConfig.getHost() + URIConstants.HISTORY;
-        basicMeasurementQosService.saveMeasurementQos(measurementQosRequest);
-
-        return MeasurementResultRMBTClientResponse.builder()
-                .rmbtResultUrl(historyUrl)
-                .error(Collections.emptyList())
-                .build();
-    }
 
     @ApiOperation("Provide parameters for QoS measurements.")
     @PostMapping(URIConstants.MEASUREMENT_QOS_REQUEST)

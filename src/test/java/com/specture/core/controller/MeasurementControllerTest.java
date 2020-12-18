@@ -90,34 +90,6 @@ public class MeasurementControllerTest {
             .andExpect(jsonPath("$.test_id").isNotEmpty());
     }
 
-
-    @Test
-    public void saveMeasurementQoS_WhenCalled_ExpectCorrectResponse() throws Exception {
-        MeasurementQosRequest measurementQosRequest = MeasurementQosRequest.builder()
-            .testToken(DEFAULT_TOKEN)
-            .build();
-        mockMvc.perform(MockMvcRequestBuilders.post(MEASUREMENT_RESULT_QOS)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtils.convertObjectToJsonBytes(measurementQosRequest))
-        ).andExpect(status().isOk());
-
-        verify(measurementQosService).saveMeasurementQos(measurementQosRequest);
-    }
-
-    @Test
-    public void saveMeasurementQoS_WhenCalledWithoutTestToken_ExpectBadRequest() throws Exception {
-        MeasurementQosRequest measurementQosRequestWithoutTestToken = MeasurementQosRequest.builder().build();
-
-        mockMvc.perform(MockMvcRequestBuilders.post(MEASUREMENT_RESULT_QOS)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtils.convertObjectToJsonBytes(measurementQosRequestWithoutTestToken))
-        )
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.message").value(TEST_TOKEN_REQUIRED));
-
-        verify(measurementQosService, never()).saveMeasurementQos(any());
-    }
-
     @Test
     public void measurementQoSRequest_WhenCalled_ExpectCorrectResponse() throws Exception {
         MeasurementQosRequest measurementQosRequest = MeasurementQosRequest.builder()

@@ -3,8 +3,10 @@ package com.specture.core.controller;
 import com.specture.core.config.MeasurementServerConfig;
 import com.specture.core.constant.MeasurementServerConstants;
 import com.specture.core.constant.URIConstants;
-import com.specture.core.model.Measurement;
-import com.specture.core.request.*;
+import com.specture.core.request.MeasurementQosParametersRequest;
+import com.specture.core.request.MeasurementQosRequest;
+import com.specture.core.request.MeasurementRegistrationForAdminRequest;
+import com.specture.core.request.MeasurementRegistrationForWebClientRequest;
 import com.specture.core.response.MeasurementHistoryResponse;
 import com.specture.core.response.MeasurementRegistrationResponse;
 import com.specture.core.response.MeasurementResultRMBTClientResponse;
@@ -15,6 +17,7 @@ import com.specture.core.service.MeasurementServerService;
 import com.specture.core.service.MeasurementService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +27,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
+@Slf4j
 public class MeasurementController {
     private final MeasurementService measurementService;
     @Qualifier("basicMeasurementQosService")
@@ -50,19 +54,6 @@ public class MeasurementController {
         var response = measurementService.registerMeasurement(dataWithServerChosenByAdminForMeasurement, headers);
         response.setTestNumThreads(MeasurementServerConstants.TEST_NUM_THREADS_FOR_WEB);
         return response;
-    }
-
-    @ApiOperation("Save measurements results.")
-    @PostMapping(URIConstants.MEASUREMENT_RESULT)
-    public MeasurementResultRMBTClientResponse saveMeasurementResult(@Validated @RequestBody MeasurementRequest measurementRequest) {
-        final String historyUrl = measurementServerConfig.getHost() + URIConstants.HISTORY;
-        final Measurement measurement = measurementService.partialUpdateMeasurementFromProbeResult(measurementRequest);
-        basicTestService.saveMeasurementToElastic(measurement);
-
-        return MeasurementResultRMBTClientResponse.builder()
-                .rmbtResultUrl(historyUrl)
-                .error(Collections.emptyList())
-                .build();
     }
 
     @ApiOperation("Save QoS measurements results.")

@@ -9,7 +9,6 @@ import com.specture.core.repository.MeasurementQosRepository;
 import com.specture.core.repository.MeasurementServerRepository;
 import com.specture.core.request.MeasurementQosRequest;
 import com.specture.core.request.measurement.qos.request.VoipTestResultRequest;
-import com.specture.core.service.BasicQosTestService;
 import com.specture.core.service.MeasurementQosService;
 import com.specture.core.service.MeasurementService;
 import org.junit.Before;
@@ -34,8 +33,6 @@ public class MeasurementQosServiceImplTest {
     @MockBean
     private MeasurementQosRepository measurementQosRepository;
     @MockBean
-    private BasicQosTestService basicQosTestService;
-    @MockBean
     private MeasurementServerRepository measurementServerRepository;
     @MockBean
     private MeasurementService measurementService;
@@ -44,7 +41,7 @@ public class MeasurementQosServiceImplTest {
 
     @Before
     public void setUp() {
-        measurementQosService = new MeasurementQosServiceImpl(measurementServerRepository, measurementQosRepository, basicQosTestService, measurementQosMapper, measurementService);
+        measurementQosService = new MeasurementQosServiceImpl(measurementServerRepository, measurementQosRepository, measurementQosMapper, measurementService);
     }
 
     @Test

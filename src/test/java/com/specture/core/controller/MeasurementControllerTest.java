@@ -3,15 +3,15 @@ package com.specture.core.controller;
 import com.specture.core.TestUtils;
 import com.specture.core.advice.ControllerErrorAdvice;
 import com.specture.core.config.MeasurementServerConfig;
-import com.specture.core.constant.ErrorMessage;
-import com.specture.core.exception.ProbePortNotFoundException;
 import com.specture.core.model.MeasurementServer;
 import com.specture.core.model.internal.DataForMeasurementRegistration;
-import com.specture.core.request.*;
+import com.specture.core.request.MeasurementQosRequest;
+import com.specture.core.request.MeasurementRegistrationForAdminRequest;
+import com.specture.core.request.MeasurementRegistrationForProbeRequest;
+import com.specture.core.request.MeasurementRegistrationForWebClientRequest;
 import com.specture.core.response.MeasurementHistoryResponse;
 import com.specture.core.response.MeasurementRegistrationResponse;
 import com.specture.core.response.MeasurementStatsForGeneralUserPortalResponse;
-import com.specture.core.service.BasicTestService;
 import com.specture.core.service.MeasurementQosService;
 import com.specture.core.service.MeasurementServerService;
 import com.specture.core.service.MeasurementService;
@@ -30,10 +30,10 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 import java.time.DayOfWeek;
 
 import static com.specture.core.TestConstants.*;
-import static com.specture.core.constant.ErrorMessage.*;
 import static com.specture.core.constant.URIConstants.*;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -52,14 +52,11 @@ public class MeasurementControllerTest {
     @MockBean
     private MeasurementServerConfig measurementServerConfig;
 
-    @MockBean
-    private BasicTestService basicTestService;
-
     private MockMvc mockMvc;
 
     @Before
     public void setUp() {
-        MeasurementController measurementResultController = new MeasurementController(measurementService, measurementQosService, measurementServerConfig, measurementServerService, basicTestService);
+        MeasurementController measurementResultController = new MeasurementController(measurementService, measurementQosService, measurementServerConfig, measurementServerService);
         mockMvc = MockMvcBuilders.standaloneSetup(measurementResultController)
             .setControllerAdvice(new ControllerErrorAdvice())
             .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())

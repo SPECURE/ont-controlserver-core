@@ -9,7 +9,6 @@ import com.specture.core.request.MeasurementRegistrationForWebClientRequest;
 import com.specture.core.response.MeasurementHistoryResponse;
 import com.specture.core.response.MeasurementRegistrationResponse;
 import com.specture.core.response.measurement.qos.response.MeasurementQosParametersResponse;
-import com.specture.core.service.BasicTestService;
 import com.specture.core.service.MeasurementQosService;
 import com.specture.core.service.MeasurementServerService;
 import com.specture.core.service.MeasurementService;
@@ -32,7 +31,6 @@ public class MeasurementController {
     private final MeasurementServerConfig measurementServerConfig;
     @Qualifier("basicMeasurementServerService")
     private final MeasurementServerService basicMeasurementServerService;
-    private final BasicTestService basicTestService;
 
 
     @ApiOperation("Return test servers and settings for web client measurements.")

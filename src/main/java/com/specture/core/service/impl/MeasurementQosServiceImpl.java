@@ -11,7 +11,6 @@ import com.specture.core.repository.MeasurementServerRepository;
 import com.specture.core.request.MeasurementQosParametersRequest;
 import com.specture.core.request.MeasurementQosRequest;
 import com.specture.core.response.measurement.qos.response.*;
-import com.specture.core.service.BasicQosTestService;
 import com.specture.core.service.MeasurementQosService;
 import com.specture.core.service.MeasurementService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,6 @@ import java.util.Optional;
 public class MeasurementQosServiceImpl implements MeasurementQosService {
     private final MeasurementServerRepository measurementServerRepository;
     private final MeasurementQosRepository measurementQosRepository;
-    private final BasicQosTestService basicQosTestService;
     private final MeasurementQosMapper measurementQosMapper;
     private final MeasurementService measurementService;
 
@@ -42,7 +40,6 @@ public class MeasurementQosServiceImpl implements MeasurementQosService {
             measurementQos.setAdHocCampaign(measurement.getAdHocCampaign());
         }
         measurementQosRepository.save(measurementQos);
-        basicQosTestService.saveMeasurementQosToElastic(measurementQos);
     }
 
     @Override

@@ -67,4 +67,5 @@ public interface ErrorMessage {
     String SEVERAL_CAMPAIGN_FOR_ONE_PROBE_SIMULTANEOUSLY = "One probe (%s) should have only one campaign simultaneously";
     String AD_HOC_CAMPAIGN_START = "Ad-hoc campaign could not start in past time";
     String AD_HOC_CAMPAIGN_DOWNTIME_CURRENT_NULL = "Attempt to update downtime with NULL current keepAlive signal";
+    String QOS_MEASUREMENT_FROM_ON_NET_SERVER = "The attempt to save QoS measurement (uuid =%s) from ON_NET server (id=%s).";
 }

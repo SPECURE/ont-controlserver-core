@@ -1,6 +1,7 @@
 package com.specture.core.service.impl;
 
 
+import com.specture.core.exception.QosMeasurementFromOnNetServerException;
 import com.specture.core.mapper.MeasurementQosMapper;
 import com.specture.core.model.AdHocCampaign;
 import com.specture.core.model.Measurement;
@@ -20,8 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.List;
 import java.util.Optional;
 
-import static com.specture.core.TestConstants.DEFAULT_AD_HOC_CAMPAIGN;
-import static com.specture.core.TestConstants.DEFAULT_TOKEN;
+import static com.specture.core.TestConstants.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -63,6 +63,24 @@ public class MeasurementQosServiceImplTest {
 
         verify(measurementQosRepository).save(measurementQos);
 
+    }
+
+    @Test(expected = QosMeasurementFromOnNetServerException.class)
+    public void saveMeasurement_whenOnNetServer_expectException() {
+        MeasurementQosRequest measurementQosRequest = getDefaultMeasurementQosRequest();
+        MeasurementQos measurementQos = getDefaultMeasurementQos();
+        Measurement measurement = Measurement.builder()
+                .serverType("ON_NET")
+                .openTestUuid(DEFAULT_OPEN_TEST_UUID)
+                .measurementServerId(DEFAULT_MEASUREMENT_SERVER_ID)
+                .build();
+
+        when(measurementQosMapper.measurementQosRequestToMeasurementQos(measurementQosRequest))
+                .thenReturn(measurementQos);
+        when(measurementService.getMeasurementByToken(DEFAULT_TOKEN))
+                .thenReturn(Optional.of(measurement));
+
+        measurementQosService.saveMeasurementQos(measurementQosRequest);
     }
 
     private MeasurementQos getDefaultMeasurementQos() {

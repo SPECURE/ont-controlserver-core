@@ -1,8 +1,10 @@
 package com.specture.core.service.impl;
 
 import com.specture.core.enums.ServerTechForMeasurement;
+import com.specture.core.enums.ServerType;
 import com.specture.core.exception.MeasurementNotFoundByUuidException;
 import com.specture.core.exception.QoSMeasurementServerNotFoundByUuidException;
+import com.specture.core.exception.QosMeasurementFromOnNetServerException;
 import com.specture.core.mapper.MeasurementQosMapper;
 import com.specture.core.model.MeasurementServer;
 import com.specture.core.model.qos.MeasurementQos;
@@ -38,6 +40,9 @@ public class MeasurementQosServiceImpl implements MeasurementQosService {
                 .orElseThrow(() -> new MeasurementNotFoundByUuidException(token));
         if (!Objects.isNull(measurement.getAdHocCampaign())) {
             measurementQos.setAdHocCampaign(measurement.getAdHocCampaign());
+        }
+        if(ServerType.ON_NET.toString().equals(measurement.getServerType())) {
+            throw new QosMeasurementFromOnNetServerException(measurement.getOpenTestUuid(), measurement.getMeasurementServerId());
         }
         measurementQosRepository.save(measurementQos);
     }

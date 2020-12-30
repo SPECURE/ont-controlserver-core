@@ -25,7 +25,11 @@ stages:
     key: "${CI_COMMIT_REF_SLUG}"
     untracked: true
   script:
-    - mvn clean test
+    - >-
+        mvn
+        org.jacoco:jacoco-maven-plugin:0.8.5:prepare-agent
+        clean test -B
+        org.jacoco:jacoco-maven-plugin:0.8.5:report
 
 .sonar:
   image: maven:3.6.3-jdk-11-slim

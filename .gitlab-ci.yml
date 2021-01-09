@@ -56,6 +56,17 @@ stages:
         -Dsonar.projectName="${SONAR_PROJECT}"
         -Dsonar.host.url="${SONAR_URL}"
         -Dsonar.login="${SONAR_KEY}"
+        -Dsonar.coverage.exclusions="src/main/java/com/specture/core/**/annotation/**,
+          src/main/java/com/specture/core/**/config/**,
+          src/main/java/com/specture/core/**/constant/**,
+          src/main/java/com/specture/core/**/enums/**,
+          src/main/java/com/specture/core/**/mapper/**,
+          src/main/java/com/specture/core/**/model/**,
+          src/main/java/com/specture/core/**/repository/**,
+          src/main/java/com/specture/core/**/request/**,
+          src/main/java/com/specture/core/**/response/**,
+          srс/main/resources/**,
+          **/*Application.java"
     - |
         URL="$(cat ./target/sonar/report-task.txt | grep ceTaskUrl | cut -c11-)"
         sleep ${SONAR_WAIT}s

@@ -15,17 +15,9 @@ public class DataCollectorServiceImpl implements DataCollectorService {
     public DataCollectorResponse extrudeData(HttpServletRequest request, Map<String, String> headers) {
         return DataCollectorResponse.builder()
                 .agent(request.getHeader("User-Agent"))
-//                .category("PERSONAL_COMPUTER")
-//                .countryGeoIp("UA")
-//                .family("CHROME")
                 .headers(headers)
                 .ip(HeaderExtrudeUtil.getIpFromNgNixHeader(headers))
-//                .languages(List.of("ru-RU", "ru", "en-US", "en", "uk"))
-//                .os("OS X")
                 .port(request.getRemotePort())
-//                .product("Chrome")
-//                .version("83")
-//                .version_minor("0")
                 .build();
     }
 }

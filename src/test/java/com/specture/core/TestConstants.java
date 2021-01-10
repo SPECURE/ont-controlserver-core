@@ -27,6 +27,9 @@ public interface TestConstants {
     Integer DEFAULT_PAGE = 1;
     Integer DEFAULT_SIZE = 10;
     String DEFAULT_SORT = "measurementDate,desc";
+    String DEFAULT_USER_AGENT = "agent";
+    String DEFAULT_X_REAL_IP = "real_ip";
+    String DEFAULT_X_FORWARDED = "real_forwrded_ip";
     String DEFAULT_SORT_PROPERTY = "measurementDate";
     Long DEFAULT_ID = 2L;
     Long DEFAULT_PROVIDER_ID = 6L;
@@ -61,6 +64,7 @@ public interface TestConstants {
     String DEFAULT_DATE_FROM_STRING = "2020-03-20";
     String DEFAULT_DATE_TO_STRING = "2020-03-24";
     String DEFAULT_PORT = "DEFAULT_PORT";
+    int DEFAULT_REMOTE_PORT = 1;
     String DEFAULT_PACKAGES_REQUEST_PARAMETER = "1";
     List<String> DEFAULT_PACKAGES = Collections.singletonList(DEFAULT_PACKAGES_REQUEST_PARAMETER);
     Long DEFAULT_PORT_ID = 1L;

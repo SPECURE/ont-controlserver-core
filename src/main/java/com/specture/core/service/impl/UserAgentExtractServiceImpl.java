@@ -1,23 +1,20 @@
 package com.specture.core.service.impl;
 
-import com.blueconic.browscap.*;
+import com.blueconic.browscap.Capabilities;
+import com.blueconic.browscap.UserAgentParser;
 import com.specture.core.service.UserAgentExtractService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.Collections;
-
 @Service
+@AllArgsConstructor
 public class UserAgentExtractServiceImpl implements UserAgentExtractService {
-    final UserAgentParser parser;
 
-    public UserAgentExtractServiceImpl() throws IOException, ParseException {
-        parser = new UserAgentService().loadParser(Collections.singletonList(BrowsCapField.BROWSER));
-    }
+    private final UserAgentParser userAgentParser;
 
     @Override
     public String getBrowser(String userAgentHeader) {
-        final Capabilities capabilities = parser.parse(userAgentHeader);
+        final Capabilities capabilities = userAgentParser.parse(userAgentHeader);
         return capabilities.getBrowser();
     }
 }

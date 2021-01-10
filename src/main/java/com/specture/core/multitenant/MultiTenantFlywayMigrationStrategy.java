@@ -14,7 +14,6 @@ public class MultiTenantFlywayMigrationStrategy implements FlywayMigrationStrate
     private DataSourceConfig dataSourceConfig;
     private ClientTenantConfig clientTenantConfig;
 
-
     @Override
     public void migrate(Flyway flyway) {
         clientTenantConfig.getClientTenantMapping().values().iterator()

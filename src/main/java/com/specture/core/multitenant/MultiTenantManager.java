@@ -85,10 +85,6 @@ public class MultiTenantManager {
         return elasticIndexTenantConfig.getBasicQosTenantIndexes().get(getCurrentTenant());
     }
 
-    public void unload() {
-        currentTenant.remove();
-    }
-
     public boolean isTenantExist(String tenantId) {
         return tenantDataSources.containsKey(tenantId);
     }

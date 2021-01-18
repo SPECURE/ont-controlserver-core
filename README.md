@@ -2,7 +2,7 @@ Nettest open-source library release under the Apache License, Version 2.0.
 
 Core library for control server to store/process measurements and communicate with control servers and clients.
 
-It's possible to use this library in 2 ways. Like a part of the some application or like a separate Java app:
+It's possible to use this library in 2 ways. Like a part of some application or like a separate Java app:
 
 Installation:
 

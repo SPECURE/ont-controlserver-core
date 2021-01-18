@@ -12,7 +12,7 @@ Installation:
         <groupId>com.specure</groupId>
         <artifactId>core</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-    </dependency>
+     </dependency>
 
 To run it as an app:
 

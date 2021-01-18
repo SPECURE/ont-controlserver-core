@@ -1,3 +1,24 @@
-# public-backend
+Nettest open-source library release under the Apache License, Version 2.0.
 
-Public part of SAH backend
+Core library for control server to store/process measurements and communicate with control servers and clients.
+
+It's possible to use this library in 2 ways. Like a part of the some application or like a separate Java app:
+
+Installation:
+
+ To use it as a library compile and add to maven:
+
+     <dependency>
+        <groupId>com.specure</groupId>
+        <artifactId>core</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+To run it as an app:
+
+1. Add SpringBoot runners to pom.xm;
+2. Add <APP_NAME>Application.jar file to com.specure.core folder
+3. Fill the application.yaml file.
+
+
+

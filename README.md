@@ -16,7 +16,7 @@ Installation:
 
 To run it as an app:
 
-1. Add SpringBoot runners to pom.xm;
+1. Add SpringBoot runners to pom.xml
 2. Add <APP_NAME>Application.jar file to com.specure.core folder
 3. Fill out the application.yaml file.
 

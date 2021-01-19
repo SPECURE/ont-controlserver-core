@@ -1,10 +1,12 @@
-Nettest open-source library release under the Apache License, Version 2.0.
+**Nettest control server core**
+
+Nettest open-source library released under the Apache License, Version 2.0.
 
 Core library for control server to store/process measurements and communicate with control servers and clients.
 
 It's possible to use this library in 2 ways. Like a part of some application or like a separate Java app:
 
-Installation:
+**Installation:**
 
  To use it as a library compile and add to maven:
 

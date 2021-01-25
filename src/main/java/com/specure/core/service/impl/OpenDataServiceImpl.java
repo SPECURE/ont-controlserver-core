@@ -59,8 +59,16 @@ public class OpenDataServiceImpl implements OpenDataService {
     @Override
     public ResponseEntity<Object> getOpenDataMonthlyExport(Integer year, Integer month, String fileExtension) {
 
-        LocalDateTime fromTime = LocalDateTime.of(year, month, 1, 0, 0, 0, 0);
-        LocalDateTime toTime = LocalDateTime.of(year, month + 1, 1, 0, 0, 0, 0);
+        LocalDateTime fromTime;
+        LocalDateTime toTime;
+
+        if(month == 12){
+            fromTime = LocalDateTime.of(year, month, 1, 0, 0, 0, 0);
+            toTime = LocalDateTime.of(year + 1, 1, 1, 0, 0, 0, 0);
+        } else {
+            fromTime = LocalDateTime.of(year, month, 1, 0, 0, 0, 0);
+            toTime = LocalDateTime.of(year, month + 1, 1, 0, 0, 0, 0);
+        }
 
         // load and map open data
         List<OpenDataExport> openDataToExport = openDataRepository

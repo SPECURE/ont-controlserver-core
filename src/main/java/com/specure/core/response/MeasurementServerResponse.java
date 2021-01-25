@@ -12,6 +12,7 @@ import java.util.Date;
 @Data
 public class MeasurementServerResponse {
     private Long id;
+    private String uuid;
 
     private String name;
     private String webAddress;
@@ -26,6 +27,8 @@ public class MeasurementServerResponse {
     private Date expiration;
     private String ipAddress;
     private String comment;
+
+    private String countries;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Timestamp timeOfLastMeasurement;

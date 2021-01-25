@@ -1,6 +1,7 @@
 package com.specure.core.request;
 
 import com.specure.core.constant.ErrorMessage;
+import com.specure.core.enums.ServerType;
 import lombok.Builder;
 import lombok.Data;
 

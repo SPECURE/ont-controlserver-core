@@ -51,7 +51,7 @@ public class MeasurementHistoryResponse {
     private List<GeoLocationResponse> geoLocations;
 
     private String model;
-    private Integer networkType;
+    private String networkType;
     private String platform;
     private String product;
 

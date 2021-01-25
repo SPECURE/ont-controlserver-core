@@ -169,7 +169,7 @@ public class MeasurementMapperImpl implements MeasurementMapper {
                 .lte_rsrq(measurement.getLte_rsrq())
                 .device(measurement.getDevice())
                 .tag(measurement.getTag())
-                .networkType(measurement.getNetworkType())
+                .networkType(NetworkType.fromValue(measurement.getNetworkType()).getName())
                 .networkOperator(measurement.getNetworkOperator())
                 .ipAddress(measurement.getIpAddress())
                 .voip_result_jitter(measurement.getVoip_result_jitter())

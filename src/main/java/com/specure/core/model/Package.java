@@ -51,5 +51,5 @@ public class Package extends BaseEntity {
     @JsonManagedReference
     private List<ProbePort> probePorts;
 
-    private boolean isVisibleOnPublicPortal;
+    private boolean visibleOnPublicPortal;
 }

@@ -50,4 +50,6 @@ public class Package extends BaseEntity {
     @OneToMany(mappedBy = "aPackage")
     @JsonManagedReference
     private List<ProbePort> probePorts;
+
+    private boolean isVisibleOnPublicPortal;
 }

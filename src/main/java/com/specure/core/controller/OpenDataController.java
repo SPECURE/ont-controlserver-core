@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 @RestController
 public class OpenDataController {
 
-    private final OpenDataService exportService;
+    private final OpenDataService openDataService;
 
     @ApiOperation("Get export file of monthly open data.")
     @GetMapping(value = URIConstants.EXPORT_MONTHLY)
@@ -25,7 +25,7 @@ public class OpenDataController {
             @PathVariable @NotNull Integer month,
             @PathVariable @NotNull String fileExtension
     ) {
-        return exportService.getOpenDataMonthlyExport(year, month, fileExtension);
+        return openDataService.getOpenDataMonthlyExport(year, month, fileExtension, "postgreSQL");
     }
 
     @ApiOperation("Get export file of full open data.")
@@ -33,7 +33,7 @@ public class OpenDataController {
     public ResponseEntity<Object> getFullExportFile(
             @PathVariable @NotNull String fileExtension
     ) {
-        return exportService.getOpenDataFullExport(fileExtension);
+        return openDataService.getOpenDataFullExport(fileExtension, "postgreSQL");
     }
 
 }

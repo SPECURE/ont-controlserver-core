@@ -3,7 +3,7 @@ package com.specure.core.service.impl;
 import com.specure.core.enums.MeasurementStatus;
 import com.specure.core.mapper.OpenDataMapper;
 import com.specure.core.model.OpenData;
-import com.specure.core.repository.OpenDataRepository;
+import com.specure.core.service.OpenDataRepositoryWrapper;
 import com.specure.core.service.OpenDataService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 public class OpenDataServiceImplTest {
 
-    @MockBean private OpenDataRepository openDataRepository;
+    @MockBean private OpenDataRepositoryWrapper openDataRepository;
     @MockBean private OpenDataMapper openDataMapper;
 
     @Captor private ArgumentCaptor<Timestamp> fromCaptor;
@@ -38,7 +38,7 @@ public class OpenDataServiceImplTest {
     @Before
     public void setUp(){
         Resource licenseResource = new ClassPathResource("license/LICENSE-CC-BY-4.0.txt");
-        openDataService = new OpenDataServiceImpl(openDataRepository, openDataMapper);
+        openDataService = new OpenDataServiceImpl(licenseResource, List.of(openDataRepository), openDataMapper);
         ReflectionTestUtils.setField(openDataService, "licenseResource", licenseResource);
     }
     @Test
@@ -51,7 +51,7 @@ public class OpenDataServiceImplTest {
         when(openDataRepository.findAllByTimeBetweenAndStatus(eq(from), eq(to), eq(MeasurementStatus.FINISHED)))
                 .thenReturn(List.of(OpenData.builder().build()));
 
-        openDataService.getOpenDataMonthlyExport(2020, 12, "csv");
+        openDataService.getOpenDataMonthlyExport(2020, 12, "csv", "postgreSQL");
 
         verify(openDataRepository).findAllByTimeBetweenAndStatus(fromCaptor.capture(), toCaptor.capture(), eq(MeasurementStatus.FINISHED));
 
@@ -69,7 +69,7 @@ public class OpenDataServiceImplTest {
         when(openDataRepository.findAllByTimeBetweenAndStatus(eq(from), eq(to), eq(MeasurementStatus.FINISHED)))
                 .thenReturn(List.of(OpenData.builder().build()));
 
-        openDataService.getOpenDataMonthlyExport(2020, 10, "csv");
+        openDataService.getOpenDataMonthlyExport(2020, 10, "csv", "postgreSQL");
 
         verify(openDataRepository).findAllByTimeBetweenAndStatus(fromCaptor.capture(), toCaptor.capture(), eq(MeasurementStatus.FINISHED));
 

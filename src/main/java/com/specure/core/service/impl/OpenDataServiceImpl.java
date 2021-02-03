@@ -7,14 +7,14 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import com.specure.core.service.OpenDataService;
 import com.specure.core.enums.MeasurementStatus;
 import com.specure.core.exception.UnsupportedFileExtensionException;
 import com.specure.core.mapper.OpenDataMapper;
 import com.specure.core.model.OpenDataExport;
 import com.specure.core.model.OpenDataExportList;
-import com.specure.core.repository.OpenDataRepository;
-import lombok.RequiredArgsConstructor;
+import com.specure.core.service.OpenDataRepositoryWrapper;
+import com.specure.core.service.OpenDataService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
@@ -37,10 +37,11 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import static com.specure.core.enums.FileExtension.*;
+import static com.specure.core.enums.FileExtension.valueOf;
 
 @Slf4j
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
+@AllArgsConstructor
 @Service
 public class OpenDataServiceImpl implements OpenDataService {
 
@@ -52,17 +53,17 @@ public class OpenDataServiceImpl implements OpenDataService {
     public static final char CSV_SEPARATOR = ';';
 
     @Value("classpath:license/" + FILENAME_LICENSE)
-    private Resource licenseResource;
-    private final OpenDataRepository openDataRepository;
+    private final Resource licenseResource;
+    private final List<OpenDataRepositoryWrapper> openDataRepositoryList;
     private final OpenDataMapper openDataMapper;
 
     @Override
-    public ResponseEntity<Object> getOpenDataMonthlyExport(Integer year, Integer month, String fileExtension) {
+    public ResponseEntity<Object> getOpenDataMonthlyExport(Integer year, Integer month, String fileExtension, String label) {
 
         LocalDateTime fromTime;
         LocalDateTime toTime;
 
-        if(month == 12){
+        if(month == 12) {
             fromTime = LocalDateTime.of(year, month, 1, 0, 0, 0, 0);
             toTime = LocalDateTime.of(year + 1, 1, 1, 0, 0, 0, 0);
         } else {
@@ -71,7 +72,7 @@ public class OpenDataServiceImpl implements OpenDataService {
         }
 
         // load and map open data
-        List<OpenDataExport> openDataToExport = openDataRepository
+        List<OpenDataExport> openDataToExport = getOpenDataSourceByLabel(label)
                 .findAllByTimeBetweenAndStatus(Timestamp.valueOf(fromTime), Timestamp.valueOf(toTime), MeasurementStatus.FINISHED)
                 .stream()
                 .map(openDataMapper::openDataToOpenDataExport)
@@ -91,10 +92,10 @@ public class OpenDataServiceImpl implements OpenDataService {
     }
 
     @Override
-    public ResponseEntity<Object> getOpenDataFullExport(String fileExtension) {
+    public ResponseEntity<Object> getOpenDataFullExport(String fileExtension, String label) {
 
         // load and map open data
-        List<OpenDataExport> openDataToExport = openDataRepository
+        List<OpenDataExport> openDataToExport = getOpenDataSourceByLabel(label)
                 .findAllByStatus(MeasurementStatus.FINISHED)
                 .stream()
                 .map(openDataMapper::openDataToOpenDataExport)
@@ -200,6 +201,14 @@ public class OpenDataServiceImpl implements OpenDataService {
         // flush and close zip entry
         out.flush();
         out.closeEntry();
+    }
+
+    private OpenDataRepositoryWrapper getOpenDataSourceByLabel(String label) {
+        return openDataRepositoryList
+                .stream()
+                .filter(repository -> repository.getSourceLabel().equals(label))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("no postgre SQL source of openData"));
     }
 
 }

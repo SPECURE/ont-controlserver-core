@@ -7,13 +7,13 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import com.specure.core.service.OpenDataService;
 import com.specure.core.enums.MeasurementStatus;
 import com.specure.core.exception.UnsupportedFileExtensionException;
 import com.specure.core.mapper.OpenDataMapper;
 import com.specure.core.model.OpenDataExport;
 import com.specure.core.model.OpenDataExportList;
 import com.specure.core.repository.OpenDataRepository;
+import com.specure.core.service.OpenDataService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import static com.specure.core.enums.FileExtension.*;
+import static com.specure.core.enums.FileExtension.valueOf;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -59,16 +59,8 @@ public class OpenDataServiceImpl implements OpenDataService {
     @Override
     public ResponseEntity<Object> getOpenDataMonthlyExport(Integer year, Integer month, String fileExtension) {
 
-        LocalDateTime fromTime;
-        LocalDateTime toTime;
-
-        if(month == 12){
-            fromTime = LocalDateTime.of(year, month, 1, 0, 0, 0, 0);
-            toTime = LocalDateTime.of(year + 1, 1, 1, 0, 0, 0, 0);
-        } else {
-            fromTime = LocalDateTime.of(year, month, 1, 0, 0, 0, 0);
-            toTime = LocalDateTime.of(year, month + 1, 1, 0, 0, 0, 0);
-        }
+        LocalDateTime fromTime = LocalDateTime.of(year, month, 1, 0, 0, 0, 0);
+        LocalDateTime toTime = LocalDateTime.of(year, month + 1, 1, 0, 0, 0, 0);
 
         // load and map open data
         List<OpenDataExport> openDataToExport = openDataRepository

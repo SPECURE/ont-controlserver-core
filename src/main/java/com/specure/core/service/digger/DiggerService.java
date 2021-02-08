@@ -23,17 +23,16 @@ public class DiggerService {
         String command = String.format(digCommandGetASN, reverseIp(address), postfix);
         return getAsnFromDigResult(digger.dig(command));
     }
+
     public String getProviderByASN(Long asn) {
         String digCommandGetProviderName = "dig -t txt AS%s.asn.cymru.com. +short";
         String command = String.format(digCommandGetProviderName, asn.toString());
         return getProviderNameFromDigResult(digger.dig(command));
     }
 
-
-
     public String reverseIp(InetAddress address) {
         final byte[] addr = address.getAddress();
-        if(addr.length == 4) {
+        if (addr.length == 4) {
             List<String> listOfParts = Arrays.asList(address.toString().substring(1).split("\\."));
             Collections.reverse(listOfParts);
             return String.join(".", listOfParts);
@@ -52,8 +51,8 @@ public class DiggerService {
         return sb.toString();
     }
 
-    public Long getAsnFromDigResult(String result){
-        if(result.isEmpty()) {
+    public Long getAsnFromDigResult(String result) {
+        if (result.isEmpty()) {
             return 0L;
         }
         String asn = result.substring(1).split(" ")[0];
@@ -63,7 +62,7 @@ public class DiggerService {
     public String getProviderNameFromDigResult(String result) {
         String[] rawList = result.split("\\|");
         int lastIndex = rawList.length - 1;
-        String rawProviderName =  rawList[lastIndex].trim();
+        String rawProviderName = rawList[lastIndex].trim();
         return rawProviderName.substring(0, rawProviderName.length() - 1);
     }
 }

@@ -7,6 +7,6 @@ import lombok.Data;
 @Data
 public class MapServerSettingsResponse {
     private String host;
-    private int port;
+    private Long port;
     private boolean ssl;
 }

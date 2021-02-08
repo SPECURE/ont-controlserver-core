@@ -15,4 +15,6 @@ public class UrlsResponse {
     private String statistics;
     private String urlIpv4Check;
     private String urlIpv6Check;
+    private String urlShare;
+    private String urlMapServer;
 }

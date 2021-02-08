@@ -1,13 +1,14 @@
 package com.specure.core.request;
 
 import com.specure.core.constant.ErrorMessage;
-import com.specure.core.enums.ServerType;
+import com.specure.core.enums.MeasurementType;
 import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.Set;
 
 @Builder
 @Data
@@ -45,4 +46,7 @@ public class MeasurementServerRequest {
     private String comment;
 
     private Date expiration;
+
+    @NotNull
+    private Set<MeasurementType> measurementTypeList;
 }

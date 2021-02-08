@@ -1,19 +1,19 @@
 package com.specure.core.mapper.impl;
 
-import com.specure.core.model.GeoLocation;
-import com.specure.core.model.Measurement;
-import com.specure.core.model.Ping;
-import com.specure.core.request.MeasurementRequest;
-import com.specure.core.response.MeasurementHistoryResponse;
-import com.specure.core.response.measurement.response.GeoLocationResponse;
-import com.specure.core.response.measurement.response.PingResponse;
-import com.specure.core.response.measurement.response.SpeedDetailResponse;
 import com.specure.core.enums.NetworkType;
 import com.specure.core.mapper.GeoLocationMapper;
 import com.specure.core.mapper.MeasurementMapper;
 import com.specure.core.mapper.PingMapper;
 import com.specure.core.mapper.SpeedDetailMapper;
+import com.specure.core.model.GeoLocation;
+import com.specure.core.model.Measurement;
+import com.specure.core.model.Ping;
 import com.specure.core.model.SpeedDetail;
+import com.specure.core.request.MeasurementRequest;
+import com.specure.core.response.MeasurementHistoryResponse;
+import com.specure.core.response.measurement.response.GeoLocationResponse;
+import com.specure.core.response.measurement.response.PingResponse;
+import com.specure.core.response.measurement.response.SpeedDetailResponse;
 import com.specure.core.utils.MeasurementCalculatorUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,44 +52,44 @@ public class MeasurementMapperImpl implements MeasurementMapper {
                 lte_rsrp = data.get();
             }
             data = getValueByKeyFromSignal(measurementRequest.getSignals(), "lte_rsrq");
-            if(data.isPresent()) {
+            if (data.isPresent()) {
                 lte_rsrq = data.get();
             }
         }
         if (measurementRequest.getJpl() != null) {
             resultJitter = MeasurementCalculatorUtil.calculateMeanJitterInMms(
-                    getLongByKeyFromJPL(measurementRequest,"voip_result_in_mean_jitter"),
-                    getLongByKeyFromJPL(measurementRequest,"voip_result_out_mean_jitter")
+                    getLongByKeyFromJPL(measurementRequest, "voip_result_in_mean_jitter"),
+                    getLongByKeyFromJPL(measurementRequest, "voip_result_out_mean_jitter")
             );
             packetLoss = resultJitter != null ? MeasurementCalculatorUtil.calculateMeanPacketLossInPercent(
                     getLongByKeyFromJPL(measurementRequest, "voip_objective_delay"),
-                    getLongByKeyFromJPL(measurementRequest,"voip_objective_call_duration"),
-                    getLongByKeyFromJPL(measurementRequest,"voip_result_in_num_packets"),
-                    getLongByKeyFromJPL(measurementRequest,"voip_result_out_num_packets")
+                    getLongByKeyFromJPL(measurementRequest, "voip_objective_call_duration"),
+                    getLongByKeyFromJPL(measurementRequest, "voip_result_in_num_packets"),
+                    getLongByKeyFromJPL(measurementRequest, "voip_result_out_num_packets")
             ) : null;
         }
 
         int networkType = Integer.parseInt(measurementRequest.getNetworkType());
 
-        double speedDownload = MeasurementCalculatorUtil.getSpeedBitPerSec(measurementRequest.getTestBytesDownload(), measurementRequest.getTestNsecDownload())/ 1e3;
-        double speedUpload = MeasurementCalculatorUtil.getSpeedBitPerSec(measurementRequest.getTestBytesUpload(), measurementRequest.getTestNsecUpload())/ 1e3;
+        double speedDownload = MeasurementCalculatorUtil.getSpeedBitPerSec(measurementRequest.getTestBytesDownload(), measurementRequest.getTestNsecDownload()) / 1e3;
+        double speedUpload = MeasurementCalculatorUtil.getSpeedBitPerSec(measurementRequest.getTestBytesUpload(), measurementRequest.getTestNsecUpload()) / 1e3;
 
         List<Ping> pings = Collections.emptyList();
-        if(measurementRequest.getPings() != null) {
+        if (measurementRequest.getPings() != null) {
             pings = measurementRequest.getPings()
                     .stream()
                     .map(pingMapper::pingRequestToPing)
                     .collect(Collectors.toList());
         }
         List<SpeedDetail> details = Collections.emptyList();
-        if(measurementRequest.getSpeedDetail() != null) {
+        if (measurementRequest.getSpeedDetail() != null) {
             details = measurementRequest.getSpeedDetail()
                     .stream()
                     .map(speedDetailMapper::speedDetailRequestToSpeedDetail)
                     .collect(Collectors.toList());
         }
         List<GeoLocation> geoLocations = Collections.emptyList();
-        if(measurementRequest.getGeoLocations() != null) {
+        if (measurementRequest.getGeoLocations() != null) {
             geoLocations = measurementRequest.getGeoLocations()
                     .stream()
                     .map(geoLocationMapper::geoLocationRequestToGeoLocation)
@@ -97,7 +97,7 @@ public class MeasurementMapperImpl implements MeasurementMapper {
         }
 
         Integer signalStrength = null;
-        Optional<Integer> signalStrengthOptional =  getSignalStrength(measurementRequest.getSignals(), NetworkType.fromValue(networkType));
+        Optional<Integer> signalStrengthOptional = getSignalStrength(measurementRequest.getSignals(), NetworkType.fromValue(networkType));
         if (signalStrengthOptional.isPresent()) {
             signalStrength = signalStrengthOptional.get();
         }
@@ -169,7 +169,7 @@ public class MeasurementMapperImpl implements MeasurementMapper {
                 .lte_rsrq(measurement.getLte_rsrq())
                 .device(measurement.getDevice())
                 .tag(measurement.getTag())
-                .networkType(NetworkType.fromValue(measurement.getNetworkType()).getName())
+                .networkType(measurement.getNetworkType())
                 .networkOperator(measurement.getNetworkOperator())
                 .ipAddress(measurement.getIpAddress())
                 .voip_result_jitter(measurement.getVoip_result_jitter())
@@ -205,7 +205,7 @@ public class MeasurementMapperImpl implements MeasurementMapper {
         String data = measurementRequest.getJpl().get(key);
         try {
             return Long.valueOf(data);
-        } catch ( NumberFormatException e) {
+        } catch (NumberFormatException e) {
             log.error("attempt to get Long by key='{}' failed; data = {}", key, data);
             return 0L;
         }
@@ -213,12 +213,13 @@ public class MeasurementMapperImpl implements MeasurementMapper {
     }
 
     public static Optional<Integer> getSignalStrength(List<Map<String, Integer>> signals, NetworkType networkType) {
-        switch (networkType.getValue()){
+        switch (networkType.getValue()) {
             case 13: // LTE use RSRP
                 return getValueByKeyFromSignal(signals, "lte_rsrp");
 
             case 97: // wired connections
-            case 98: return Optional.empty();
+            case 98:
+                return Optional.empty();
 
             default: // try to find RSSI
                 return getValueByKeyFromSignal(signals, "signal_strength");

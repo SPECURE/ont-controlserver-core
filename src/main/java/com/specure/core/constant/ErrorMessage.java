@@ -52,7 +52,7 @@ public interface ErrorMessage {
     String UNSUPPORTED_FILE_EXTENSION = "Unsupported file extension %s";
     String PROBE_PORT_IS_NULL = "probePort is null during the attempt to get Kafka message";
     String PROBE_PORT_DOES_NOT_HAVE_PROBE = "probePort %s does not have probe during the attempt to get Kafka message";
-    String PROBE_IN_PROBE_PORT_DOES_NOT_HAVE_SITE= "probe %s probePort %s does not have site during the attempt to get Kafka message";
+    String PROBE_IN_PROBE_PORT_DOES_NOT_HAVE_SITE = "probe %s probePort %s does not have site during the attempt to get Kafka message";
     String PROBE_PORT_DOES_NOT_HAVE_PACKAGE = "probe probePort %s does not have package during the attempt to get Kafka message";
     String PACKAGE_IN_PROBE_PORT_DOES_NOT_HAVE_PROVIDER = "package %s in probePort %s does not have provider during the attempt to get Kafka message";
     String BAD_CAMPAIGN_STATUS = "Ad-hoc campaign status %s is wrong";
@@ -68,4 +68,6 @@ public interface ErrorMessage {
     String AD_HOC_CAMPAIGN_START = "Ad-hoc campaign could not start in past time";
     String AD_HOC_CAMPAIGN_DOWNTIME_CURRENT_NULL = "Attempt to update downtime with NULL current keepAlive signal";
     String QOS_MEASUREMENT_FROM_ON_NET_SERVER = "The attempt to save QoS measurement (uuid =%s) from ON_NET server (id=%s).";
+    String UNSUPPORTED_CLIENT_NAME = "Unsupported client name %s";
+    String CLIENT_NOT_FOUND = "No client found by id %s.";
 }

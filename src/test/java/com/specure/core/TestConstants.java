@@ -77,7 +77,7 @@ public interface TestConstants {
     String DEFAULT_EMAIL = "test@email.com";
     String DEFAULT_PROVIDER_NAME = "BATELCO";
     String DEFAULT_GEO_PROVIDER_NAME = "LANETUA-AS, UA";
-    MeasurementType DEFAULT_CLIENT = MeasurementType.RMBTWS;
+    MeasurementType DEFAULT_CLIENT = MeasurementType.RMBTws;
     Map<String, String> DEFAULT_HEADER = new HashMap<>();
     Long DEFAULT_ASN = 39608L;
     long DEFAULT_TODAY_AMOUNT_OF_MEASUREMENTS = 123L;

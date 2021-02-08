@@ -1,6 +1,6 @@
 package com.specure.core.request;
 
-import com.specure.core.enums.ClientType;
+import com.specure.core.enums.MeasurementType;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class ClientLocationRequest {
     @NotNull
-    private ClientType client;
+    private MeasurementType client;
     private String language;
     private LocationRequest location;
 }

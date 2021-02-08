@@ -9,4 +9,8 @@ import lombok.Data;
 public class QosMeasurementTypeDescription {
     private String name;
     private QosMeasurement testType;
+
+    public static QosMeasurementTypeDescription fromQosMeasurement(QosMeasurement qosMeasurement) {
+        return new QosMeasurementTypeDescription(qosMeasurement.getDescription(), qosMeasurement);
+    }
 }

@@ -2,6 +2,7 @@ package com.specure.core.controller;
 
 import com.specure.core.TestUtils;
 import com.specure.core.advice.ControllerErrorAdvice;
+import com.specure.core.constant.URIConstants;
 import com.specure.core.exception.MeasurementServerNotFoundException;
 import com.specure.core.exception.ProviderNotFoundByIdException;
 import com.specure.core.request.ClientLocationRequest;
@@ -9,7 +10,6 @@ import com.specure.core.request.MeasurementServerRequest;
 import com.specure.core.response.MeasurementServerResponse;
 import com.specure.core.response.NearestMeasurementServersResponse;
 import com.specure.core.service.MeasurementServerService;
-import com.specure.core.constant.URIConstants;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,10 +26,12 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static com.specure.core.TestConstants.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -44,11 +46,11 @@ public class MeasurementServerControllerTest {
     public void setUp() {
         MeasurementServerController measurementServerController = new MeasurementServerController(measurementServerService);
         mockMvc = MockMvcBuilders
-            .standaloneSetup(measurementServerController)
-            .setControllerAdvice(new ControllerErrorAdvice())
-            .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
-            .setViewResolvers((viewName, locale) -> new MappingJackson2JsonView())
-            .build();
+                .standaloneSetup(measurementServerController)
+                .setControllerAdvice(new ControllerErrorAdvice())
+                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+                .setViewResolvers((viewName, locale) -> new MappingJackson2JsonView())
+                .build();
     }
 
     @Test
@@ -56,8 +58,8 @@ public class MeasurementServerControllerTest {
         List<MeasurementServerResponse> response = Collections.emptyList();
         when(measurementServerService.getMeasurementServers(any())).thenReturn(response);
         mockMvc
-            .perform(MockMvcRequestBuilders.get(URIConstants.MEASUREMENT_SERVER))
-            .andExpect(status().isOk());
+                .perform(MockMvcRequestBuilders.get(URIConstants.MEASUREMENT_SERVER))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -67,13 +69,13 @@ public class MeasurementServerControllerTest {
 
         when(measurementServerService.getMeasurementServers(null)).thenReturn(response);
         mockMvc
-            .perform(MockMvcRequestBuilders.get(URIConstants.MEASUREMENT_SERVER)
-                .contentType(MediaType.APPLICATION_JSON)
-                .param("page", String.valueOf(DEFAULT_PAGE))
-                .param("size", String.valueOf(DEFAULT_SIZE))
-                .param("sort", DEFAULT_SORT)
-            )
-            .andExpect(status().isOk());
+                .perform(MockMvcRequestBuilders.get(URIConstants.MEASUREMENT_SERVER)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("page", String.valueOf(DEFAULT_PAGE))
+                        .param("size", String.valueOf(DEFAULT_SIZE))
+                        .param("sort", DEFAULT_SORT)
+                )
+                .andExpect(status().isOk());
 
         verify(measurementServerService).getMeasurementServers(null);
     }
@@ -82,33 +84,35 @@ public class MeasurementServerControllerTest {
     public void measurementServerController_WhenCallCreateNew_ExpectCorrectResponse() throws Exception {
         MeasurementServerRequest measurementServerRequest = getDefaultMeasurementServerRequest();
         mockMvc
-            .perform(MockMvcRequestBuilders.post(URIConstants.MEASUREMENT_SERVER)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtils.convertObjectToJsonBytes(measurementServerRequest))
-            ).andExpect(status().isCreated());
+                .perform(MockMvcRequestBuilders.post(URIConstants.MEASUREMENT_SERVER)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtils.convertObjectToJsonBytes(measurementServerRequest))
+                )
+                .andDo(print())
+                .andExpect(status().isCreated());
     }
 
     @Test
     public void measurementServerController_WhenCallCreateNewWithNotExistProvider_ExpectBadRequest() throws Exception {
         MeasurementServerRequest measurementServerRequest = getDefaultMeasurementServerRequest();
         doThrow(new ProviderNotFoundByIdException(DEFAULT_ID))
-            .when(measurementServerService)
-            .createMeasurementServer(eq(measurementServerRequest));
+                .when(measurementServerService)
+                .createMeasurementServer(eq(measurementServerRequest));
         mockMvc
-            .perform(MockMvcRequestBuilders.post(URIConstants.MEASUREMENT_SERVER)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtils.convertObjectToJsonBytes(measurementServerRequest))
-            ).andExpect(status().isBadRequest());
+                .perform(MockMvcRequestBuilders.post(URIConstants.MEASUREMENT_SERVER)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtils.convertObjectToJsonBytes(measurementServerRequest))
+                ).andExpect(status().isBadRequest());
     }
 
     @Test
     public void measurementServerController_WhenCallUpdate_ExpectCorrectResponse() throws Exception {
         MeasurementServerRequest measurementServerRequest = getDefaultMeasurementServerRequest();
         mockMvc
-            .perform(MockMvcRequestBuilders.put(URIConstants.MEASUREMENT_SERVER_ID, DEFAULT_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtils.convertObjectToJsonBytes(measurementServerRequest))
-            ).andExpect(status().isOk());
+                .perform(MockMvcRequestBuilders.put(URIConstants.MEASUREMENT_SERVER_ID, DEFAULT_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtils.convertObjectToJsonBytes(measurementServerRequest))
+                ).andExpect(status().isOk());
     }
 
     @Test
@@ -119,32 +123,33 @@ public class MeasurementServerControllerTest {
         when(measurementServerService.getNearestServers(clientLocationRequest)).thenReturn(nearestMeasurementServersResponse);
 
         mockMvc
-            .perform(MockMvcRequestBuilders.post(URIConstants.MEASUREMENT_SERVER_WEB)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtils.convertObjectToJsonBytes(clientLocationRequest))
-            ).andExpect(status().isOk());
+                .perform(MockMvcRequestBuilders.post(URIConstants.MEASUREMENT_SERVER_WEB)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtils.convertObjectToJsonBytes(clientLocationRequest))
+                ).andExpect(status().isOk());
     }
 
     @Test
     public void measurementServerController_WhenCallUpdateWithWrongId_ExpectBadRequest() throws Exception {
         MeasurementServerRequest measurementServerRequest = getDefaultMeasurementServerRequest();
         doThrow(new MeasurementServerNotFoundException(DEFAULT_ID))
-            .when(measurementServerService)
-            .updateMeasurementServer(DEFAULT_ID, measurementServerRequest);
+                .when(measurementServerService)
+                .updateMeasurementServer(DEFAULT_ID, measurementServerRequest);
         mockMvc
-            .perform(MockMvcRequestBuilders.put(URIConstants.MEASUREMENT_SERVER_ID, DEFAULT_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtils.convertObjectToJsonBytes(measurementServerRequest))
-            ).andExpect(status().isBadRequest());
+                .perform(MockMvcRequestBuilders.put(URIConstants.MEASUREMENT_SERVER_ID, DEFAULT_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtils.convertObjectToJsonBytes(measurementServerRequest))
+                ).andExpect(status().isBadRequest());
     }
 
 
     private MeasurementServerRequest getDefaultMeasurementServerRequest() {
         return MeasurementServerRequest.builder()
-            .name(DEFAULT_MEASUREMENT_SERVER_NAME)
-            .webAddress(DEFAULT_SITE_ADDRESS)
-            .providerId(DEFAULT_ID)
-            .build();
+                .name(DEFAULT_MEASUREMENT_SERVER_NAME)
+                .webAddress(DEFAULT_SITE_ADDRESS)
+                .providerId(DEFAULT_ID)
+                .measurementTypeList(Set.of(DEFAULT_MEASUREMENT_SERVER_TYPE))
+                .build();
     }
 
 }

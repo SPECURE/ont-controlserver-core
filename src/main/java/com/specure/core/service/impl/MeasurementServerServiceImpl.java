@@ -2,6 +2,7 @@ package com.specure.core.service.impl;
 
 import com.specure.core.config.MeasurementServerConfig;
 import com.specure.core.constant.MeasurementServerConstants;
+import com.specure.core.enums.MeasurementType;
 import com.specure.core.exception.MeasurementServerNotFoundException;
 import com.specure.core.mapper.MeasurementServerMapper;
 import com.specure.core.model.Measurement;
@@ -11,9 +12,9 @@ import com.specure.core.model.Provider;
 import com.specure.core.model.internal.DataForMeasurementRegistration;
 import com.specure.core.repository.MeasurementServerRepository;
 import com.specure.core.request.*;
-import com.specure.core.request.*;
 import com.specure.core.response.MeasurementServerForWebResponse;
 import com.specure.core.response.MeasurementServerResponse;
+import com.specure.core.response.MeasurementServerResponseForSettings;
 import com.specure.core.response.NearestMeasurementServersResponse;
 import com.specure.core.service.JiraApiService;
 import com.specure.core.service.MeasurementServerService;
@@ -71,7 +72,7 @@ public class MeasurementServerServiceImpl implements MeasurementServerService {
         return DataForMeasurementRegistration.builder()
                 .measurementServer(measurementServer)
                 .clientUuid(measurementRegistrationForWebClientRequest.getUuid())
-                .clientType(measurementRegistrationForWebClientRequest.getClient())
+                .measurementType(measurementRegistrationForWebClientRequest.getClient())
                 .build();
     }
 
@@ -147,7 +148,7 @@ public class MeasurementServerServiceImpl implements MeasurementServerService {
 
         return DataForMeasurementRegistration.builder()
                 .measurementServer(serverChosenByAdmin)
-                .clientType(measurementRegistrationForAdminRequest.getClient())
+                .measurementType(measurementRegistrationForAdminRequest.getClient())
                 .clientUuid(measurementRegistrationForAdminRequest.getUuid())
                 .build();
     }
@@ -242,5 +243,12 @@ public class MeasurementServerServiceImpl implements MeasurementServerService {
         }
 
         return description;
+    }
+
+    @Override
+    public List<MeasurementServerResponseForSettings> getServers(List<MeasurementType> serverTypes) {
+        return measurementServerRepository.getByActiveTrueAndSelectableTrueAndServerTypeIn(serverTypes).stream()
+                .map(measurementServerMapper::measurementServersToMeasurementServerResponseForSettings)
+                .collect(Collectors.toList());
     }
 }

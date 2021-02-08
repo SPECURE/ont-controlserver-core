@@ -5,7 +5,7 @@ import com.specure.core.constant.ErrorMessage;
 import com.specure.core.constant.MeasurementServerConstants;
 import com.specure.core.enums.MeasurementStatus;
 import com.specure.core.enums.Platform;
-import com.specure.core.enums.ServerType;
+import com.specure.core.enums.ServerNetworkType;
 import com.specure.core.exception.MeasurementNotFoundByUuidException;
 import com.specure.core.mapper.MeasurementMapper;
 import com.specure.core.model.Measurement;
@@ -145,12 +145,12 @@ public class MeasurementServiceImpl implements MeasurementService {
                 .build();
 
         if (dataForMeasurementRegistration.getIsOnNet() != null) {
-            ServerType serverType = dataForMeasurementRegistration.getIsOnNet() ? ServerType.ON_NET : ServerType.OFF_NET;
-            measurement.setServerType(serverType.toString());
+            ServerNetworkType serverNetworkType = dataForMeasurementRegistration.getIsOnNet() ? ServerNetworkType.ON_NET : ServerNetworkType.OFF_NET;
+            measurement.setServerType(serverNetworkType.toString());
         }
 
         Measurement savedMeasurement = measurementRepository.save(measurement);
-        Integer port = dataForMeasurementRegistration.getClientType().getServerTechForMeasurement().getDefaultSslPort();
+        Integer port = dataForMeasurementRegistration.getMeasurementType().getServerTechForMeasurement().getDefaultSslPort();
 
         return MeasurementRegistrationResponse.builder()
                 .testNumThreads(MeasurementServerConstants.TEST_NUM_THREADS)

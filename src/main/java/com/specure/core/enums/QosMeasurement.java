@@ -8,10 +8,10 @@ public enum QosMeasurement {
     TCP("TCP", "TCP ports"),
     UDP("UDP", "UDP ports"),
     VOIP("VOIP", "Voice over IP"),
-    TRACEROUTE("TRACEROUTE", "Traceroute");
+    TRACEROUTE("TRACEROUTE", "Traceroute"),
+    TRACEROUTE_MASKED("TRACEROUTE_MASKED", "Traceroute");
 
     private final String value;
-
 
     private final String description;
 
@@ -23,6 +23,7 @@ public enum QosMeasurement {
     public String getValue() {
         return value;
     }
+
     public String getDescription() {
         return description;
     }

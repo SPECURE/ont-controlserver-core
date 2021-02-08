@@ -1,8 +1,8 @@
 package com.specure.core.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.specure.core.enums.ClientType;
 import com.specure.core.constant.ErrorMessage;
+import com.specure.core.enums.MeasurementType;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 public class MeasurementRegistrationForProbeRequest {
 
     @NotNull
-    private ClientType client;
+    private MeasurementType client;
 
     @NotNull(message = ErrorMessage.PORT_NAME_REQUIRED)
     @JsonProperty("ifport")

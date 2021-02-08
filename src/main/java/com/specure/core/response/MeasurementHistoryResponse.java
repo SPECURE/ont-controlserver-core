@@ -51,7 +51,7 @@ public class MeasurementHistoryResponse {
     private List<GeoLocationResponse> geoLocations;
 
     private String model;
-    private String networkType;
+    private Integer networkType;
     private String platform;
     private String product;
 
@@ -92,7 +92,7 @@ public class MeasurementHistoryResponse {
     private Integer testPortRemote;
     private Long testTotalBytesDownload;
     private Long testTotalBytesUpload;
-    private  String testEncryption;
+    private String testEncryption;
     private String testIpLocal;
     private String testIpServer;
     private Integer testIfBytesDownload;

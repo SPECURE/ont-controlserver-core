@@ -2,7 +2,7 @@ package com.specure.core.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.specure.core.enums.ClientType;
+import com.specure.core.enums.MeasurementType;
 import lombok.Builder;
 import lombok.Data;
 
@@ -17,7 +17,7 @@ public class MeasurementRegistrationForAdminRequest {
     private Long measurementServerId;
 
     @NotNull
-    private ClientType client;
+    private MeasurementType client;
 
     private String language;
     private long time;

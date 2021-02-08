@@ -1,11 +1,10 @@
 package com.specure.core.model;
 
+import com.specure.core.enums.ClientType;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Builder
 @Entity
@@ -16,6 +15,25 @@ import javax.persistence.Id;
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+
+    @Column(name = "uuid")
     private String uuid;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "client_type")
+    private ClientType clientType;
+
+    @Column(name = "terms_and_conditions_accepted")
+    private Boolean termsAndConditionsAccepted;
+
+    @Column(name = "terms_and_conditions_accepted_version")
+    private Long termsAndConditionsAcceptedVersion;
+
+    @Column(name = "terms_and_conditions_accepted_timestamp")
+    private LocalDateTime termsAndConditionsAcceptedTimestamp;
+
+    @Column(name = "last_seen")
+    private LocalDateTime lastSeen;
 }

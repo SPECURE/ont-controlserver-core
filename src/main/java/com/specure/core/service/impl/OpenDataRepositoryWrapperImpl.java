@@ -1,16 +1,17 @@
-package com.specure.core.service;
+package com.specure.core.service.impl;
 
 import com.specure.core.enums.MeasurementStatus;
 import com.specure.core.model.OpenData;
 import com.specure.core.repository.OpenDataRepository;
+import com.specure.core.service.OpenDataRepositoryWrapper;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.util.List;
 
 @AllArgsConstructor
-@Service
+@Component
 public class OpenDataRepositoryWrapperImpl implements OpenDataRepositoryWrapper {
 
     private final OpenDataRepository openDataRepository;

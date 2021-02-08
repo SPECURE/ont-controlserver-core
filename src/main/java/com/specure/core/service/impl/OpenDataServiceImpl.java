@@ -14,7 +14,7 @@ import com.specure.core.model.OpenDataExport;
 import com.specure.core.model.OpenDataExportList;
 import com.specure.core.service.OpenDataRepositoryWrapper;
 import com.specure.core.service.OpenDataService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
@@ -40,8 +40,7 @@ import java.util.zip.ZipOutputStream;
 import static com.specure.core.enums.FileExtension.valueOf;
 
 @Slf4j
-//@RequiredArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class OpenDataServiceImpl implements OpenDataService {
 
@@ -53,7 +52,8 @@ public class OpenDataServiceImpl implements OpenDataService {
     public static final char CSV_SEPARATOR = ';';
 
     @Value("classpath:license/" + FILENAME_LICENSE)
-    private final Resource licenseResource;
+    private Resource licenseResource;
+
     private final List<OpenDataRepositoryWrapper> openDataRepositoryList;
     private final OpenDataMapper openDataMapper;
 

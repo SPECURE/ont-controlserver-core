@@ -37,8 +37,9 @@ public class OpenDataServiceImplTest {
 
     @Before
     public void setUp(){
+        when(openDataRepository.getSourceLabel()).thenReturn("postgreSQL");
         Resource licenseResource = new ClassPathResource("license/LICENSE-CC-BY-4.0.txt");
-        openDataService = new OpenDataServiceImpl(licenseResource, List.of(openDataRepository), openDataMapper);
+        openDataService = new OpenDataServiceImpl(List.of(openDataRepository), openDataMapper);
         ReflectionTestUtils.setField(openDataService, "licenseResource", licenseResource);
     }
     @Test

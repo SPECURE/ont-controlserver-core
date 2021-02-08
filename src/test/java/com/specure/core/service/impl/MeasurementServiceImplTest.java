@@ -68,9 +68,9 @@ public class MeasurementServiceImplTest {
         MeasurementRequest measurementRequest = getMeasurementRequestDefault();
 
         when(measurementMapper.measurementRequestToMeasurement(measurementRequest))
-            .thenReturn(measurement);
+                .thenReturn(measurement);
         when(measurementRepository.save(measurement))
-            .thenReturn(null);
+                .thenReturn(null);
 
         measurementService.saveMeasurement(measurementRequest);
 
@@ -83,20 +83,20 @@ public class MeasurementServiceImplTest {
 
         Timestamp now = new Timestamp(System.currentTimeMillis());
         Measurement measurementAfterMapping = Measurement.builder()
-            .token(DEFAULT_TOKEN)
-            .pingMedian(DEFAULT_PIN_MEDIAN)
-            .voip_result_jitter(DEFAULT_VOIP_RESULT_JITTER)
-            .time(now)
-            .status(MeasurementStatus.FINISHED)
-            .build();
+                .token(DEFAULT_TOKEN)
+                .pingMedian(DEFAULT_PIN_MEDIAN)
+                .voip_result_jitter(DEFAULT_VOIP_RESULT_JITTER)
+                .time(now)
+                .status(MeasurementStatus.FINISHED)
+                .build();
         Measurement measurementFromDB = Measurement.builder().time(now).build();
 
         when(measurementRepository.findByToken(DEFAULT_TOKEN))
-            .thenReturn(Optional.of(measurementFromDB));
+                .thenReturn(Optional.of(measurementFromDB));
         when(measurementMapper.measurementRequestToMeasurement(measurementRequest))
-            .thenReturn(measurementAfterMapping);
+                .thenReturn(measurementAfterMapping);
         when(measurementRepository.save(measurementFromDB))
-            .thenReturn(null);
+                .thenReturn(null);
 
         measurementService.partialUpdateMeasurementFromProbeResult(measurementRequest);
 
@@ -115,11 +115,11 @@ public class MeasurementServiceImplTest {
 
 
         when(measurementRepository.findByToken(DEFAULT_TOKEN))
-            .thenReturn(Optional.of(measurementFromDB));
+                .thenReturn(Optional.of(measurementFromDB));
         when(measurementMapper.measurementRequestToMeasurement(measurementRequest))
-            .thenReturn(measurementAfterMapping);
+                .thenReturn(measurementAfterMapping);
         when(measurementRepository.save(afterPartialUpdate))
-            .thenReturn(null);
+                .thenReturn(null);
 
         afterPartialUpdate.setId(id);
         afterPartialUpdate.setTime(now);
@@ -138,12 +138,12 @@ public class MeasurementServiceImplTest {
     public void registerMeasurement_WhenCallWithDataWithoutProvider_ExpectNullInProvider() {
         final Measurement measurement;
         MeasurementServer measurementServer = MeasurementServer.builder()
-            .secretKey(DEFAULT_MEASUREMENT_SERVER_SECRET_KEY)
-            .build();
+                .secretKey(DEFAULT_MEASUREMENT_SERVER_SECRET_KEY)
+                .build();
         final DataForMeasurementRegistration dataForMeasurementRegistration = DataForMeasurementRegistration.builder()
-            .measurementServer(measurementServer)
-            .clientType(DEFAULT_CLIENT)
-            .build();
+                .measurementServer(measurementServer)
+                .measurementType(DEFAULT_CLIENT)
+                .build();
 
         when(measurementServerConfig.getSlotWindow()).thenReturn(DEFAULT_SLOT_WINDOW);
         when(measurementRepository.countAllByTestSlot(anyInt())).thenReturn(0L);
@@ -161,16 +161,16 @@ public class MeasurementServiceImplTest {
     public void registerMeasurement_WhenCall_ExpectSaveMeasurement() {
 
         MeasurementServer measurementServer = MeasurementServer.builder()
-            .secretKey(DEFAULT_MEASUREMENT_SERVER_SECRET_KEY)
-            .provider(DEFAULT_PROVIDER)
-            .name(DEFAULT_MEASUREMENT_SERVER_NAME)
-            .webAddress(DEFAULT_MEASUREMENT_SERVER_ADDRESS)
-            .build();
+                .secretKey(DEFAULT_MEASUREMENT_SERVER_SECRET_KEY)
+                .provider(DEFAULT_PROVIDER)
+                .name(DEFAULT_MEASUREMENT_SERVER_NAME)
+                .webAddress(DEFAULT_MEASUREMENT_SERVER_ADDRESS)
+                .build();
         Measurement savedMeasurement = Measurement.builder().id(1L).build();
         final DataForMeasurementRegistration dataForMeasurementRegistration = DataForMeasurementRegistration.builder()
-            .measurementServer(measurementServer)
-            .clientType(DEFAULT_CLIENT)
-            .build();
+                .measurementServer(measurementServer)
+                .measurementType(DEFAULT_CLIENT)
+                .build();
 
         when(measurementServerConfig.getSlotWindow()).thenReturn(DEFAULT_SLOT_WINDOW);
         when(measurementRepository.countAllByTestSlot(anyInt())).thenReturn(0L);
@@ -186,17 +186,17 @@ public class MeasurementServiceImplTest {
     public void registerMeasurement_WhenCall_ExpectGetProvider() throws UnknownHostException {
 
         MeasurementServer measurementServer = MeasurementServer.builder()
-            .secretKey(DEFAULT_MEASUREMENT_SERVER_SECRET_KEY)
-            .provider(DEFAULT_PROVIDER)
-            .name(DEFAULT_MEASUREMENT_SERVER_NAME)
-            .webAddress(DEFAULT_MEASUREMENT_SERVER_ADDRESS)
-            .build();
+                .secretKey(DEFAULT_MEASUREMENT_SERVER_SECRET_KEY)
+                .provider(DEFAULT_PROVIDER)
+                .name(DEFAULT_MEASUREMENT_SERVER_NAME)
+                .webAddress(DEFAULT_MEASUREMENT_SERVER_ADDRESS)
+                .build();
 
         Measurement savedMeasurement = Measurement.builder().id(1L).build();
         final DataForMeasurementRegistration dataForMeasurementRegistration = DataForMeasurementRegistration.builder()
-            .measurementServer(measurementServer)
-            .clientType(DEFAULT_CLIENT)
-            .build();
+                .measurementServer(measurementServer)
+                .measurementType(DEFAULT_CLIENT)
+                .build();
 
         when(measurementServerConfig.getSlotWindow()).thenReturn(DEFAULT_SLOT_WINDOW);
         when(measurementRepository.countAllByTestSlot(anyInt())).thenReturn(0L);
@@ -251,22 +251,22 @@ public class MeasurementServiceImplTest {
 
     private MeasurementRequest getMeasurementRequestDefault() {
         return MeasurementRequest.builder()
-            .build();
+                .build();
     }
 
     private Measurement getMeasurementDefault() {
         return Measurement.builder()
-            .token(DEFAULT_TOKEN)
-            .speedDownload(DEFAULT_SPEED_DOWNLOAD)
-            .speedUpload(DEFAULT_SPEED_UPLOAD)
-            .lte_rsrp(DEFAULT_LTE_RSRP)
-            .voip_result_packet_loss(DEFAULT_VOIP_RESULT_PACKET_LOSS)
-            .voip_result_jitter(DEFAULT_VOIP_RESULT_JITTER)
-            .device(DEFAULT_DEVICE)
-            .networkType(DEFAULT_NETWORK_TYPE)
-            .tag(DEFAULT_TAG)
-            .pingMedian(DEFAULT_PIN_MEDIAN)
-            .signalStrength(DEFAULT_SIGNAL_STRENGTH)
-            .build();
+                .token(DEFAULT_TOKEN)
+                .speedDownload(DEFAULT_SPEED_DOWNLOAD)
+                .speedUpload(DEFAULT_SPEED_UPLOAD)
+                .lte_rsrp(DEFAULT_LTE_RSRP)
+                .voip_result_packet_loss(DEFAULT_VOIP_RESULT_PACKET_LOSS)
+                .voip_result_jitter(DEFAULT_VOIP_RESULT_JITTER)
+                .device(DEFAULT_DEVICE)
+                .networkType(DEFAULT_NETWORK_TYPE)
+                .tag(DEFAULT_TAG)
+                .pingMedian(DEFAULT_PIN_MEDIAN)
+                .signalStrength(DEFAULT_SIGNAL_STRENGTH)
+                .build();
     }
 }

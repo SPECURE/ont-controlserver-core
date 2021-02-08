@@ -1,6 +1,6 @@
 package com.specure.core.request;
 
-import com.specure.core.enums.ClientType;
+import com.specure.core.enums.MeasurementType;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 public class MeasurementRegistrationForWebClientRequest {
 
     @NotNull
-    private ClientType client;
+    private MeasurementType client;
 
     private String language;
     private long time;

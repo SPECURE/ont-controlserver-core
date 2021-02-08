@@ -1,9 +1,9 @@
 package com.specure.core.model.internal;
 
-import com.specure.core.model.Provider;
-import com.specure.core.enums.ClientType;
+import com.specure.core.enums.MeasurementType;
 import com.specure.core.model.AdHocCampaign;
 import com.specure.core.model.MeasurementServer;
+import com.specure.core.model.Provider;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DataForMeasurementRegistration {
-    private ClientType clientType;
+    private MeasurementType measurementType;
     private MeasurementServer measurementServer;
     private String port;
     private String deviceOrProbeId;

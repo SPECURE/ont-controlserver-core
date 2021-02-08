@@ -1,11 +1,12 @@
 package com.specure.core.mapper;
 
+import com.specure.core.enums.MeasurementType;
+import com.specure.core.model.MeasurementServer;
+import com.specure.core.model.MeasurementServerDescription;
 import com.specure.core.request.MeasurementServerRequest;
 import com.specure.core.response.MeasurementServerForWebResponse;
 import com.specure.core.response.MeasurementServerResponse;
-import com.specure.core.enums.ClientType;
-import com.specure.core.model.MeasurementServer;
-import com.specure.core.model.MeasurementServerDescription;
+import com.specure.core.response.MeasurementServerResponseForSettings;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -33,7 +34,8 @@ public interface MeasurementServerMapper {
     MeasurementServerResponse measurementServerToMeasurementServerResponse(MeasurementServer measurementServer);
 
     @Mapping(target = "address", source = "measurementServer.webAddress")
-    @Mapping(source = "clientType.serverTechForMeasurement.defaultSslPort", target = "port")
-    MeasurementServerForWebResponse measurementServersToMeasurementServerForWebResponse(MeasurementServer measurementServer, ClientType clientType);
+    @Mapping(source = "measurementType.serverTechForMeasurement.defaultSslPort", target = "port")
+    MeasurementServerForWebResponse measurementServersToMeasurementServerForWebResponse(MeasurementServer measurementServer, MeasurementType measurementType);
 
+    MeasurementServerResponseForSettings measurementServersToMeasurementServerResponseForSettings(MeasurementServer measurementServer);
 }

@@ -32,7 +32,7 @@ public interface Config {
             "HW-PROBE");
 
     List<MeasurementType> SERVER_TEST_SERVER_TYPES = List.of(MeasurementType.RMBT);
-    List<MeasurementType> SERVER_QOS_TEST_SERVER_TYPES = List.of(MeasurementType.QOS);
+    List<MeasurementType> SERVER_QOS_TEST_SERVER_TYPES = List.of(MeasurementType.QoS);
     List<MeasurementType> SERVER_HTTP_TEST_SERVER_TYPES = List.of(MeasurementType.RMBT);
-    List<MeasurementType> SERVER_WS_TEST_SERVER_TYPES = List.of(MeasurementType.RMBTWS);
+    List<MeasurementType> SERVER_WS_TEST_SERVER_TYPES = List.of(MeasurementType.RMBTws);
 }

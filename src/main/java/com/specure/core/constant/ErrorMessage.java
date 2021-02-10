@@ -70,4 +70,12 @@ public interface ErrorMessage {
     String QOS_MEASUREMENT_FROM_ON_NET_SERVER = "The attempt to save QoS measurement (uuid =%s) from ON_NET server (id=%s).";
     String UNSUPPORTED_CLIENT_NAME = "Unsupported client name %s";
     String CLIENT_NOT_FOUND = "No client found by id %s.";
+    String SITE_ADVERTISED_ID_REQUIRED = "Site advertised id is mandatory.";
+    String SITE_NAME_REQUIRED = "Site name is mandatory.";
+    String SITE_ADDRESS_REQUIRED = "Site address is mandatory.";
+    String SITE_COORDINATES_REQUIRED = "Site coordinates are mandatory.";
+    String SITE_MEASUREMENT_REQUIRED = "Site measurement is mandatory.";
+    String ADVERTISED_ID_MAX_SIZE = "Site advertised id should be less than 32 characters";
+    String SITE_NAME_MAX_SIZE = "Site name should be less than 64 characters.";
+    String SITE_ADDRESS_MAX_SIZE = "Site address should be less than 256 characters.";
 }

@@ -41,4 +41,6 @@ public class Site extends BaseEntity {
         probes.forEach(probe -> probe.setSite(this));
         this.probes = probes;
     }
+
+    private boolean visibleOnPublicPortal;
 }

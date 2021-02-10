@@ -49,4 +49,8 @@ public class MeasurementServerRequest {
 
     @NotNull
     private Set<MeasurementType> measurementTypeList;
+
+    private Double longitude;
+
+    private Double latitude;
 }

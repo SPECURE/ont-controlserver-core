@@ -40,15 +40,17 @@ public class MeasurementServerServiceImpl implements MeasurementServerService {
     private final MeasurementService measurementService;
     private final JiraApiService jiraApiService;
     private final MeasurementServerConfig measurementServerConfig;
+    private final UUIDGenerator uuidGenerator;
 
     public MeasurementServerServiceImpl(MeasurementServerRepository measurementServerRepository, MeasurementServerMapper measurementServerMapper, ProviderService providerService,
-                                        MeasurementService measurementService, JiraApiService jiraApiService, MeasurementServerConfig measurementServerConfig) {
+                                        MeasurementService measurementService, JiraApiService jiraApiService, MeasurementServerConfig measurementServerConfig, UUIDGenerator uuidGenerator) {
         this.measurementServerRepository = measurementServerRepository;
         this.measurementServerMapper = measurementServerMapper;
         this.providerService = providerService;
         this.measurementService = measurementService;
         this.jiraApiService = jiraApiService;
         this.measurementServerConfig = measurementServerConfig;
+        this.uuidGenerator = uuidGenerator;
     }
 
     @Override
@@ -163,6 +165,7 @@ public class MeasurementServerServiceImpl implements MeasurementServerService {
         }
         provider = providerService.getProviderById(providerId);
         measurementServer.setProvider(provider);
+        measurementServer.setUuid(uuidGenerator.generateUUID().toString());
         measurementServerRepository.save(measurementServer);
 
         jiraApiService.createIssue(MeasurementServerConstants.JIRA_SUMMARY, getDescription(measurementServer));

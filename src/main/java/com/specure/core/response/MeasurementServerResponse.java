@@ -37,4 +37,8 @@ public class MeasurementServerResponse {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Timestamp lastSuccessfulMeasurement;
+
+    private Double latitude;
+
+    private Double longitude;
 }

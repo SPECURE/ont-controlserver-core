@@ -26,6 +26,7 @@ import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.specure.core.TestConstants.*;
 import static junit.framework.TestCase.*;
@@ -46,13 +47,15 @@ public class MeasurementServerServiceImplTest {
     private MeasurementService measurementService;
     @MockBean
     private MeasurementServerConfig measurementServerConfig;
+    @MockBean
+    private UUIDGenerator uuidGenerator;
 
     private MeasurementServerService measurementServerService;
 
     @Before
     public void setUp() {
         measurementServerService = new MeasurementServerServiceImpl(measurementServerRepository, measurementServerMapper,
-            providerService, measurementService, jiraApiService, measurementServerConfig);
+                providerService, measurementService, jiraApiService, measurementServerConfig, uuidGenerator);
     }
 
 

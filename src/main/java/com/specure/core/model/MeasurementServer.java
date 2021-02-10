@@ -45,4 +45,10 @@ public class MeasurementServer extends BaseEntity {
 
     @Column(name = "uuid")
     private String uuid;
+
+    @Column(name = "geo_lat")
+    private Double latitude;
+
+    @Column(name = "geo_long")
+    private Double longitude;
 }

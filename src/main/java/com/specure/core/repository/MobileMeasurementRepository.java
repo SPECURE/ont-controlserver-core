@@ -10,7 +10,7 @@ import java.util.List;
 public interface MobileMeasurementRepository extends JpaRepository<MobileMeasurement, Long> {
 
     @Query(value = "SELECT DISTINCT group_name" +
-            " FROM test t" +
+            " FROM mobile_measurement t" +
             " JOIN network_type nt ON t.network_type=nt.id " +
             "WHERE t.deleted = false" +
             " AND t.status = 'FINISHED' " +
@@ -21,7 +21,7 @@ public interface MobileMeasurementRepository extends JpaRepository<MobileMeasure
 
 
     @Query(value = "SELECT DISTINCT COALESCE(adm.fullname, t.model) model"
-            + " FROM test t"
+            + " FROM mobile_measurement t"
             + " LEFT JOIN device_map adm ON adm.codename=t.model " +
             "WHERE t.client_id = :clientId" +
             " AND t.deleted = false" +

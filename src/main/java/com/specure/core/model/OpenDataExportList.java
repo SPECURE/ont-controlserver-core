@@ -14,5 +14,5 @@ import java.util.List;
 @XmlRootElement()
 public class OpenDataExportList {
 
-    private List<OpenDataExport> openDataExport;
+    private List<Object> openDataExport;
 }

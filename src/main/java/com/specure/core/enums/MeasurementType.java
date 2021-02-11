@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum MeasurementType {
-    RMBTWS("RMBTws", ServerTechForMeasurement.WS_TECH),
+    RMBTws("RMBTws", ServerTechForMeasurement.WS_TECH),
     RMBT("RMBT", ServerTechForMeasurement.RMBT_TECH),
-    QOS("QoS", ServerTechForMeasurement.QOS_TECH),
+    QoS("QoS", ServerTechForMeasurement.QOS_TECH),
     HTTP("HTTP", ServerTechForMeasurement.QOS_TECH);
 
     private final String name;

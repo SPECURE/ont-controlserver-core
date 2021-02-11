@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString
 @Entity
-@Table(name = "test")
+@Table(name = "mobile_measurement")
 public class MobileMeasurement {
     @Id
     @Column(name = "id")

@@ -1,18 +1,28 @@
 package com.specure.core.model;
 
-import lombok.*;
-
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Collections;
 import java.util.List;
 
-@Builder
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-@XmlRootElement()
-public class OpenDataExportList {
 
-    private List<Object> openDataExport;
+@XmlRootElement()
+public class OpenDataExportList<T> {
+    private List<T> openDataExport;
+
+    public List<T> getOpenDataExport() {
+        return openDataExport;
+    }
+
+    public void setOpenDataExport(List<T> openDataExport) {
+        this.openDataExport = openDataExport;
+    }
+
+    public OpenDataExportList(List<T> openDataExport) {
+        this.openDataExport = openDataExport;
+    }
+
+    public OpenDataExportList() {
+        this.openDataExport = Collections.emptyList();
+    }
+
 }

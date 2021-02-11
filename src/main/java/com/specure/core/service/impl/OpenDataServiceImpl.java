@@ -8,6 +8,7 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.specure.core.exception.UnsupportedFileExtensionException;
+import com.specure.core.model.OpenDataExportList;
 import com.specure.core.service.OpenDataInputStreamService;
 import com.specure.core.service.OpenDataService;
 import lombok.RequiredArgsConstructor;
@@ -64,7 +65,7 @@ public class OpenDataServiceImpl implements OpenDataService {
         LocalDateTime toTime = LocalDateTime.of(toYear, toMonth, 1, 0, 0, 0, 0);
 
         OpenDataInputStreamService inputStreamService = getOpenDataSourceByLabel(label);
-        List<Object> data = inputStreamService
+        OpenDataExportList<?> data = inputStreamService
                 .findAllByTimeBetweenAndStatus(Timestamp.valueOf(fromTime), Timestamp.valueOf(toTime));
 
         var inputStream = streamOpenData(data, filename, fileExtension, inputStreamService);
@@ -84,7 +85,7 @@ public class OpenDataServiceImpl implements OpenDataService {
         String filename = String.format(FILENAME_FULL_EXPORT, fileExtension);
 
         OpenDataInputStreamService inputStreamService = getOpenDataSourceByLabel(label);
-        List<Object> data = inputStreamService.findAllByStatus();
+        OpenDataExportList<?> data = inputStreamService.findAllByStatus();
         ByteArrayInputStream openDataStream = streamOpenData(data, filename, fileExtension, inputStreamService);
 
         // return open data
@@ -104,7 +105,7 @@ public class OpenDataServiceImpl implements OpenDataService {
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("no postgre SQL source of openData"));
     }
-    private ByteArrayInputStream streamOpenData(List<Object> openDataList, String filename, String fileExtension, OpenDataInputStreamService inputStreamService) {
+    private ByteArrayInputStream streamOpenData(OpenDataExportList<?> openDataList, String filename, String fileExtension, OpenDataInputStreamService inputStreamService) {
 
         ByteArrayOutputStream zip = new ByteArrayOutputStream();
         ZipOutputStream out = new ZipOutputStream(zip);
@@ -125,7 +126,7 @@ public class OpenDataServiceImpl implements OpenDataService {
         return new ByteArrayInputStream(zip.toByteArray());
     }
 
-    private void createOpenDataExportFile(List<Object> openDataList, String filename, String fileExtension, ZipOutputStream out, OpenDataInputStreamService inputStreamService) throws IOException, JAXBException {
+    private void createOpenDataExportFile(OpenDataExportList<?> openDataList, String filename, String fileExtension, ZipOutputStream out, OpenDataInputStreamService inputStreamService) throws IOException, JAXBException {
 
         // create new zip entry
         out.putNextEntry(new ZipEntry(filename));
@@ -161,11 +162,12 @@ public class OpenDataServiceImpl implements OpenDataService {
                 break;
             }
             case xml: {
-
-                // TODO: replace hardcoded OpenDataExportList.class
-                Marshaller marshaller = JAXBContext.newInstance(inputStreamService.getOpenDataListClass()).createMarshaller();
+                Marshaller marshaller = JAXBContext.newInstance(
+                        OpenDataExportList.class,
+                        inputStreamService.getOpenDataClass()
+                ).createMarshaller();
                 marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-                marshaller.marshal(inputStreamService.getOpenDataList(openDataList), out);
+                marshaller.marshal(openDataList, out);
                 break;
             }
             default: {

@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -25,19 +24,24 @@ public class OpenDataInputStreamServiceImpl implements OpenDataInputStreamServic
     private final OpenDataMapper openDataMapper;
 
     @Override
-    public List<Object> findAllByTimeBetweenAndStatus(Timestamp timeStart, Timestamp timeEnd ) {
-        return openDataRepository
+    public OpenDataExportList<OpenDataExport> findAllByTimeBetweenAndStatus(Timestamp timeStart, Timestamp timeEnd ) {
+
+        var data =  openDataRepository
                 .findAllByTimeBetweenAndStatus(timeStart, timeEnd, MeasurementStatus.FINISHED)
                 .stream()
                 .map(openDataMapper::openDataToOpenDataExport)
                 .collect(Collectors.toList());
+
+        return new OpenDataExportList<>(data);
+
     }
 
     @Override
-    public List<Object> findAllByStatus() {
-        return openDataRepository.findAllByStatus(MeasurementStatus.FINISHED).stream()
+    public OpenDataExportList<OpenDataExport> findAllByStatus() {
+        var data =  openDataRepository.findAllByStatus(MeasurementStatus.FINISHED).stream()
                 .map(openDataMapper::openDataToOpenDataExport)
                 .collect(Collectors.toList());
+        return new OpenDataExportList<>(data);
     }
 
     @Override
@@ -50,15 +54,4 @@ public class OpenDataInputStreamServiceImpl implements OpenDataInputStreamServic
         return OpenDataExport.class;
     }
 
-    @Override
-    public Class<?> getOpenDataListClass() {
-        return OpenDataExportList.class;
-    }
-
-    @Override
-    public Object getOpenDataList(List<Object> data) {
-        return OpenDataExportList.builder()
-                .openDataExport(data)
-                .build();
-    }
 }

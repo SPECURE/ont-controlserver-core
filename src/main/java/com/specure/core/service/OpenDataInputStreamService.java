@@ -1,13 +1,12 @@
 package com.specure.core.service;
 
+import com.specure.core.model.OpenDataExportList;
+
 import java.sql.Timestamp;
-import java.util.List;
 
 public interface OpenDataInputStreamService {
-    List<Object> findAllByTimeBetweenAndStatus(Timestamp timeStart, Timestamp timeEnd);
-    List<Object> findAllByStatus();
+    OpenDataExportList<?> findAllByTimeBetweenAndStatus(Timestamp timeStart, Timestamp timeEnd);
+    OpenDataExportList<?> findAllByStatus();
     String getSourceLabel();
     Class<?> getOpenDataClass();
-    Class<?> getOpenDataListClass();
-    Object getOpenDataList(List<Object> data);
 }

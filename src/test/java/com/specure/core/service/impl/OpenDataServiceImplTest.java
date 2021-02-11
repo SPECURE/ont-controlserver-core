@@ -1,6 +1,7 @@
 package com.specure.core.service.impl;
 
 import com.specure.core.model.OpenDataExport;
+import com.specure.core.model.OpenDataExportList;
 import com.specure.core.service.OpenDataInputStreamService;
 import com.specure.core.service.OpenDataService;
 import org.junit.Assert;
@@ -16,7 +17,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.sql.Timestamp;
-import java.util.Collections;
 import java.util.List;
 
 import static com.specure.core.TestConstants.DEFAULT_OPEN_DATA_FILE_EXTENSION;
@@ -48,8 +48,10 @@ public class OpenDataServiceImplTest {
         Timestamp from = Timestamp.valueOf("2020-10-01 00:00:00.0");
         Timestamp to = Timestamp.valueOf("2020-11-01 00:00:00.0");
 
-        when(openDataRepository.findAllByTimeBetweenAndStatus(eq(from), eq(to)))
-                .thenReturn(Collections.emptyList());
+        List<OpenDataExport> data = List.of(OpenDataExport.builder().build());
+        OpenDataExportList<?> openData = new OpenDataExportList<>(data);
+        doReturn(openData).when(openDataRepository).findAllByTimeBetweenAndStatus(eq(from), eq(to));
+
 
         openDataService.getOpenDataMonthlyExport(2020, 10, DEFAULT_OPEN_DATA_FILE_EXTENSION, "postgreSQL");
 
@@ -65,9 +67,9 @@ public class OpenDataServiceImplTest {
         Timestamp from = Timestamp.valueOf("2020-12-01 00:00:00.0");
         Timestamp to = Timestamp.valueOf("2021-01-01 00:00:00.0");
 
-
-        when(openDataRepository.findAllByTimeBetweenAndStatus(eq(from), eq(to)))
-                .thenReturn(Collections.emptyList());
+        List<OpenDataExport> data = List.of(OpenDataExport.builder().build());
+        OpenDataExportList<?> openData = new OpenDataExportList<>(data);
+        doReturn(openData).when(openDataRepository).findAllByTimeBetweenAndStatus(eq(from), eq(to));
 
         openDataService.getOpenDataMonthlyExport(2020, 12, DEFAULT_OPEN_DATA_FILE_EXTENSION, "postgreSQL");
 
@@ -78,5 +80,30 @@ public class OpenDataServiceImplTest {
         Assert.assertEquals(to, toCaptor.getValue());
     }
 
+    @Test
+    public void getOpenDataFullExport_whenInvokeWithXML_expectCorrectAnswer() {
+        List<OpenDataExport> data = List.of(OpenDataExport.builder()
+                .catTechnology("")
+                .ipProtocol("")
+                .lteRsrp("")
+                .networkType("")
+                .openTestUuid("")
+                .numThreadsDl("")
+                .numThreadsUl("")
+                .pingMedian("")
+                .platform("")
+                .provider("")
+                .signalStrength("")
+                .speedDownload("")
+                .speedUpload("")
+                .time("")
+                .build());
+        var listData = new OpenDataExportList<>(data);
+        doReturn(listData).when(openDataRepository).findAllByStatus();
+
+        var result = openDataService.getOpenDataFullExport("xml", "postgreSQL");
+
+        Assert.assertNotNull(result);
+    }
 
 }

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import com.specure.core.constant.OpenDataSource;
 import com.specure.core.enums.DigitalSeparator;
 import com.specure.core.exception.UnsupportedFileExtensionException;
 import com.specure.core.model.OpenDataExportList;
@@ -34,6 +35,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import static com.specure.core.constant.ErrorMessage.NO_OPEN_DATA_SOURCE;
 import static com.specure.core.enums.FileExtension.valueOf;
 
 @Slf4j
@@ -55,7 +57,7 @@ public class OpenDataServiceImpl implements OpenDataService {
     private final List<OpenDataInputStreamService> openDataRepositoryList;
 
     @Override
-    public ResponseEntity<Object> getOpenDataMonthlyExport(Integer year, Integer month, String fileExtension, String label, DigitalSeparator digitalSeparator) {
+    public ResponseEntity<Object> getOpenDataMonthlyExport(Integer year, Integer month, String fileExtension, DigitalSeparator digitalSeparator) {
 
         String filename = String.format(FILENAME_MONTHLY_EXPORT, year, month, fileExtension);
 
@@ -65,7 +67,7 @@ public class OpenDataServiceImpl implements OpenDataService {
         LocalDateTime fromTime = LocalDateTime.of(year, month, 1, 0, 0, 0, 0);
         LocalDateTime toTime = LocalDateTime.of(toYear, toMonth, 1, 0, 0, 0, 0);
 
-        OpenDataInputStreamService inputStreamService = getOpenDataSourceByLabel(label);
+        OpenDataInputStreamService inputStreamService = getOpenDataSource();
         OpenDataExportList<?> data = inputStreamService
                 .findAllByTimeBetweenAndStatus(Timestamp.valueOf(fromTime), Timestamp.valueOf(toTime), digitalSeparator);
 
@@ -81,11 +83,11 @@ public class OpenDataServiceImpl implements OpenDataService {
     }
 
     @Override
-    public ResponseEntity<Object> getOpenDataFullExport(String fileExtension, String label, DigitalSeparator digitalSeparator) {
+    public ResponseEntity<Object> getOpenDataFullExport(String fileExtension, DigitalSeparator digitalSeparator) {
 
         String filename = String.format(FILENAME_FULL_EXPORT, fileExtension);
 
-        OpenDataInputStreamService inputStreamService = getOpenDataSourceByLabel(label);
+        OpenDataInputStreamService inputStreamService = getOpenDataSource();
         OpenDataExportList<?> data = inputStreamService.findAllByStatus(digitalSeparator);
         ByteArrayInputStream openDataStream = streamOpenData(data, filename, fileExtension, inputStreamService);
 
@@ -99,13 +101,14 @@ public class OpenDataServiceImpl implements OpenDataService {
     }
 
 
-    private OpenDataInputStreamService getOpenDataSourceByLabel(String label) {
+    public OpenDataInputStreamService getOpenDataSource() {
         return openDataRepositoryList
                 .stream()
-                .filter(repository -> repository.getSourceLabel().equals(label))
+                .filter(repository -> repository.getSourceLabel().equals(OpenDataSource.DATABASE_MEASUREMENT))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("no postgre SQL source of openData"));
+                .orElseThrow(() -> new RuntimeException(NO_OPEN_DATA_SOURCE));
     }
+
     private ByteArrayInputStream streamOpenData(OpenDataExportList<?> openDataList, String filename, String fileExtension, OpenDataInputStreamService inputStreamService) {
 
         ByteArrayOutputStream zip = new ByteArrayOutputStream();

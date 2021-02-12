@@ -1,6 +1,5 @@
 package com.specure.core.controller;
 
-import com.specure.core.constant.OpenDataSource;
 import com.specure.core.constant.URIConstants;
 import com.specure.core.enums.DigitalSeparator;
 import com.specure.core.service.OpenDataService;
@@ -29,7 +28,7 @@ public class OpenDataController {
             @PathVariable @NotNull String fileExtension,
             @RequestParam(required = false, defaultValue = "COMMA") DigitalSeparator digitalSeparator
     ) {
-        return openDataService.getOpenDataMonthlyExport(year, month, fileExtension, OpenDataSource.DATABASE_MEASUREMENT, digitalSeparator);
+        return openDataService.getOpenDataMonthlyExport(year, month, fileExtension, digitalSeparator);
     }
 
     @ApiOperation("Get export file of full open data.")
@@ -38,7 +37,7 @@ public class OpenDataController {
             @PathVariable @NotNull String fileExtension,
             @RequestParam(required = false, defaultValue = "COMMA") DigitalSeparator digitalSeparator
     ) {
-        return openDataService.getOpenDataFullExport(fileExtension, OpenDataSource.DATABASE_MEASUREMENT, digitalSeparator);
+        return openDataService.getOpenDataFullExport(fileExtension, digitalSeparator);
     }
 
 }

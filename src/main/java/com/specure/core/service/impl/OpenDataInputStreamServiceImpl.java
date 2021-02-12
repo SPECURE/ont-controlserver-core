@@ -1,5 +1,7 @@
 package com.specure.core.service.impl;
 
+import com.specure.core.constant.OpenDataSource;
+import com.specure.core.enums.DigitalSeparator;
 import com.specure.core.enums.MeasurementStatus;
 import com.specure.core.mapper.OpenDataMapper;
 import com.specure.core.model.OpenDataExport;
@@ -24,7 +26,7 @@ public class OpenDataInputStreamServiceImpl implements OpenDataInputStreamServic
     private final OpenDataMapper openDataMapper;
 
     @Override
-    public OpenDataExportList<OpenDataExport> findAllByTimeBetweenAndStatus(Timestamp timeStart, Timestamp timeEnd ) {
+    public OpenDataExportList<OpenDataExport> findAllByTimeBetweenAndStatus(Timestamp timeStart, Timestamp timeEnd, DigitalSeparator digitalSeparator ) {
 
         var data =  openDataRepository
                 .findAllByTimeBetweenAndStatus(timeStart, timeEnd, MeasurementStatus.FINISHED)
@@ -37,7 +39,7 @@ public class OpenDataInputStreamServiceImpl implements OpenDataInputStreamServic
     }
 
     @Override
-    public OpenDataExportList<OpenDataExport> findAllByStatus() {
+    public OpenDataExportList<OpenDataExport> findAllByStatus(DigitalSeparator digitalSeparator) {
         var data =  openDataRepository.findAllByStatus(MeasurementStatus.FINISHED).stream()
                 .map(openDataMapper::openDataToOpenDataExport)
                 .collect(Collectors.toList());
@@ -46,7 +48,7 @@ public class OpenDataInputStreamServiceImpl implements OpenDataInputStreamServic
 
     @Override
     public String getSourceLabel() {
-        return "postgreSQL";
+        return OpenDataSource.DATABASE_MEASUREMENT;
     }
 
     @Override

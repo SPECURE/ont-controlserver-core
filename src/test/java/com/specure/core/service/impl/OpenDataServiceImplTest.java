@@ -1,5 +1,7 @@
 package com.specure.core.service.impl;
 
+import com.specure.core.constant.OpenDataSource;
+import com.specure.core.enums.DigitalSeparator;
 import com.specure.core.model.OpenDataExport;
 import com.specure.core.model.OpenDataExportList;
 import com.specure.core.service.OpenDataInputStreamService;
@@ -35,7 +37,7 @@ public class OpenDataServiceImplTest {
 
     @Before
     public void setUp(){
-        when(openDataRepository.getSourceLabel()).thenReturn("postgreSQL");
+        when(openDataRepository.getSourceLabel()).thenReturn(OpenDataSource.DATABASE_MEASUREMENT);
         doReturn(OpenDataExport.class).when(openDataRepository).getOpenDataClass();
         Resource licenseResource = new ClassPathResource("license/LICENSE-CC-BY-4.0.txt");
         openDataService = new OpenDataServiceImpl(List.of(openDataRepository));
@@ -50,13 +52,13 @@ public class OpenDataServiceImplTest {
 
         List<OpenDataExport> data = List.of(OpenDataExport.builder().build());
         OpenDataExportList<?> openData = new OpenDataExportList<>(data);
-        doReturn(openData).when(openDataRepository).findAllByTimeBetweenAndStatus(eq(from), eq(to));
+        doReturn(openData).when(openDataRepository).findAllByTimeBetweenAndStatus(eq(from), eq(to), eq(DigitalSeparator.COMMA));
 
 
-        openDataService.getOpenDataMonthlyExport(2020, 10, DEFAULT_OPEN_DATA_FILE_EXTENSION, "postgreSQL");
+        openDataService.getOpenDataMonthlyExport(2020, 10, DEFAULT_OPEN_DATA_FILE_EXTENSION, OpenDataSource.DATABASE_MEASUREMENT, DigitalSeparator.COMMA);
 
         verify(openDataRepository)
-                .findAllByTimeBetweenAndStatus(fromCaptor.capture(), toCaptor.capture());
+                .findAllByTimeBetweenAndStatus(fromCaptor.capture(), toCaptor.capture(), eq(DigitalSeparator.COMMA));
 
         Assert.assertEquals(from, fromCaptor.getValue());
         Assert.assertEquals(to, toCaptor.getValue());
@@ -69,17 +71,16 @@ public class OpenDataServiceImplTest {
 
         List<OpenDataExport> data = List.of(OpenDataExport.builder().build());
         OpenDataExportList<?> openData = new OpenDataExportList<>(data);
-        doReturn(openData).when(openDataRepository).findAllByTimeBetweenAndStatus(eq(from), eq(to));
+        doReturn(openData).when(openDataRepository).findAllByTimeBetweenAndStatus(eq(from), eq(to), eq(DigitalSeparator.COMMA));
 
-        openDataService.getOpenDataMonthlyExport(2020, 12, DEFAULT_OPEN_DATA_FILE_EXTENSION, "postgreSQL");
+        openDataService.getOpenDataMonthlyExport(2020, 12, DEFAULT_OPEN_DATA_FILE_EXTENSION, OpenDataSource.DATABASE_MEASUREMENT, DigitalSeparator.COMMA);
 
         verify(openDataRepository)
-                .findAllByTimeBetweenAndStatus(fromCaptor.capture(), toCaptor.capture());
+                .findAllByTimeBetweenAndStatus(fromCaptor.capture(), toCaptor.capture(), eq(DigitalSeparator.COMMA));
 
         Assert.assertEquals(from, fromCaptor.getValue());
         Assert.assertEquals(to, toCaptor.getValue());
     }
-
     @Test
     public void getOpenDataFullExport_whenInvokeWithXML_expectCorrectAnswer() {
         List<OpenDataExport> data = List.of(OpenDataExport.builder()
@@ -99,9 +100,9 @@ public class OpenDataServiceImplTest {
                 .time("")
                 .build());
         var listData = new OpenDataExportList<>(data);
-        doReturn(listData).when(openDataRepository).findAllByStatus();
+        doReturn(listData).when(openDataRepository).findAllByStatus(DigitalSeparator.COMMA);
 
-        var result = openDataService.getOpenDataFullExport("xml", "postgreSQL");
+        var result = openDataService.getOpenDataFullExport("xml", OpenDataSource.DATABASE_MEASUREMENT, DigitalSeparator.COMMA);
 
         Assert.assertNotNull(result);
     }

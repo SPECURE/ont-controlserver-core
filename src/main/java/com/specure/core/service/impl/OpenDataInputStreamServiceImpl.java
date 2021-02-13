@@ -20,8 +20,6 @@ import java.util.stream.Collectors;
 @Component
 public class OpenDataInputStreamServiceImpl implements OpenDataInputStreamService {
 
-
-
     private final OpenDataRepository openDataRepository;
     private final OpenDataMapper openDataMapper;
 

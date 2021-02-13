@@ -15,6 +15,7 @@ import org.mockito.Captor;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -83,28 +84,25 @@ public class OpenDataServiceImplTest {
     }
     @Test
     public void getOpenDataFullExport_whenInvokeWithXML_expectCorrectAnswer() {
-        List<OpenDataExport> data = List.of(OpenDataExport.builder()
-                .catTechnology("")
-                .ipProtocol("")
-                .lteRsrp("")
-                .networkType("")
-                .openTestUuid("")
-                .numThreadsDl("")
-                .numThreadsUl("")
-                .pingMedian("")
-                .platform("")
-                .provider("")
-                .signalStrength("")
-                .speedDownload("")
-                .speedUpload("")
-                .time("")
-                .build());
+        List<OpenDataExport> data = List.of(OpenDataExport.builder().build());
         var listData = new OpenDataExportList<>(data);
         doReturn(listData).when(openDataRepository).findAllByStatus(DigitalSeparator.COMMA);
 
         var result = openDataService.getOpenDataFullExport("xml", DigitalSeparator.COMMA);
 
         Assert.assertNotNull(result);
+        Assert.assertEquals(HttpStatus.OK, result.getStatusCode());
+    }
+    @Test
+    public void getOpenDataFullExport_whenInvokeWithJson_expectCorrectAnswer() {
+        List<OpenDataExport> data = List.of(OpenDataExport.builder().build());
+        var listData = new OpenDataExportList<>(data);
+        doReturn(listData).when(openDataRepository).findAllByStatus(DigitalSeparator.COMMA);
+
+        var result = openDataService.getOpenDataFullExport("json", DigitalSeparator.COMMA);
+
+        Assert.assertNotNull(result);
+        Assert.assertEquals(HttpStatus.OK, result.getStatusCode());
     }
 
 }

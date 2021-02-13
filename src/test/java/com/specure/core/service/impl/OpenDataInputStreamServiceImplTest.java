@@ -49,7 +49,7 @@ public class OpenDataInputStreamServiceImplTest {
         when(openDataMapper.openDataToOpenDataExport(eq(openData)))
                 .thenReturn(openDataExport);
 
-        var result = openDataInputStreamService.findAllByTimeBetweenAndStatus(start, finish, DigitalSeparator.COMMA);
+        var result = openDataInputStreamService.getAllByTimeBetweenWithSeparator(start, finish, DigitalSeparator.COMMA);
 
         Assert.assertEquals(1, result.getOpenDataExport().size());
     }
@@ -64,7 +64,7 @@ public class OpenDataInputStreamServiceImplTest {
         when(openDataMapper.openDataToOpenDataExport(eq(openData)))
                 .thenReturn(openDataExport);
 
-        var result = openDataInputStreamService.findAllByStatus( DigitalSeparator.COMMA);
+        var result = openDataInputStreamService.getAllOpenDataWithSeparator( DigitalSeparator.COMMA);
 
         Assert.assertEquals(1, result.getOpenDataExport().size());
     }

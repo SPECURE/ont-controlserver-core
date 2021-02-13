@@ -69,7 +69,7 @@ public class OpenDataServiceImpl implements OpenDataService {
 
         OpenDataInputStreamService inputStreamService = getOpenDataSource();
         OpenDataExportList<?> data = inputStreamService
-                .findAllByTimeBetweenAndStatus(Timestamp.valueOf(fromTime), Timestamp.valueOf(toTime), digitalSeparator);
+                .getAllByTimeBetweenWithSeparator(Timestamp.valueOf(fromTime), Timestamp.valueOf(toTime), digitalSeparator);
 
         var inputStream = streamOpenData(data, filename, fileExtension, inputStreamService);
 
@@ -88,7 +88,7 @@ public class OpenDataServiceImpl implements OpenDataService {
         String filename = String.format(FILENAME_FULL_EXPORT, fileExtension);
 
         OpenDataInputStreamService inputStreamService = getOpenDataSource();
-        OpenDataExportList<?> data = inputStreamService.findAllByStatus(digitalSeparator);
+        OpenDataExportList<?> data = inputStreamService.getAllOpenDataWithSeparator(digitalSeparator);
         ByteArrayInputStream openDataStream = streamOpenData(data, filename, fileExtension, inputStreamService);
 
         // return open data

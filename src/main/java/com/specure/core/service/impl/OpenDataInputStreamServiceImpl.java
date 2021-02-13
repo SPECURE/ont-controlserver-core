@@ -24,7 +24,7 @@ public class OpenDataInputStreamServiceImpl implements OpenDataInputStreamServic
     private final OpenDataMapper openDataMapper;
 
     @Override
-    public OpenDataExportList<OpenDataExport> findAllByTimeBetweenAndStatus(Timestamp timeStart, Timestamp timeEnd, DigitalSeparator digitalSeparator ) {
+    public OpenDataExportList<OpenDataExport> getAllByTimeBetweenWithSeparator(Timestamp timeStart, Timestamp timeEnd, DigitalSeparator digitalSeparator ) {
 
         var data =  openDataRepository
                 .findAllByTimeBetweenAndStatus(timeStart, timeEnd, MeasurementStatus.FINISHED)
@@ -37,7 +37,7 @@ public class OpenDataInputStreamServiceImpl implements OpenDataInputStreamServic
     }
 
     @Override
-    public OpenDataExportList<OpenDataExport> findAllByStatus(DigitalSeparator digitalSeparator) {
+    public OpenDataExportList<OpenDataExport> getAllOpenDataWithSeparator(DigitalSeparator digitalSeparator) {
         var data =  openDataRepository.findAllByStatus(MeasurementStatus.FINISHED).stream()
                 .map(openDataMapper::openDataToOpenDataExport)
                 .collect(Collectors.toList());

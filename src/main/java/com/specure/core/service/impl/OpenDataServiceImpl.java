@@ -102,9 +102,12 @@ public class OpenDataServiceImpl implements OpenDataService {
 
 
     public OpenDataInputStreamService getOpenDataSource() {
+        return getOpenDataSourceByLabel(OpenDataSource.DATABASE_MEASUREMENT);
+    }
+    protected OpenDataInputStreamService getOpenDataSourceByLabel(String label) {
         return openDataRepositoryList
                 .stream()
-                .filter(repository -> repository.getSourceLabel().equals(OpenDataSource.DATABASE_MEASUREMENT))
+                .filter(repository -> repository.getSourceLabel().equals(label))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException(NO_OPEN_DATA_SOURCE));
     }

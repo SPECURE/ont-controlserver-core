@@ -15,6 +15,7 @@ import com.specure.core.service.OpenDataInputStreamService;
 import com.specure.core.service.OpenDataService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -41,6 +42,7 @@ import static com.specure.core.enums.FileExtension.valueOf;
 @Slf4j
 @RequiredArgsConstructor
 @Service
+@Qualifier(OpenDataSource.DATABASE_MEASUREMENT)
 public class OpenDataServiceImpl implements OpenDataService {
 
     public static final char CSV_SEPARATOR = ';';

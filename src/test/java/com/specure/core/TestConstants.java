@@ -1,6 +1,5 @@
 package com.specure.core;
 
-import com.specure.core.enums.ClientType;
 import com.specure.core.enums.MeasurementType;
 import com.specure.core.enums.QosMeasurement;
 import com.specure.core.model.Provider;
@@ -124,4 +123,7 @@ public interface TestConstants {
     MeasurementType DEFAULT_MEASUREMENT_SERVER_TYPE = MeasurementType.RMBT;
     String DEFAULT_MOBILE_MEASUREMENT_MODEL = "DEFAULT_MOBILE_MEASUREMENT_MODEL";
     String DEFAULT_MOBILE_MEASUREMENT_NETWORK = "DEFAULT_MOBILE_MEASUREMENT_NETWORK";
+    String DEFAULT_OPEN_DATA_FILE_EXTENSION = "csv";
+    String DEFAULT_OPEN_DATA_YEAR = "2021";
+    String DEFAULT_OPEN_DATA_MONTH = "12";
 }

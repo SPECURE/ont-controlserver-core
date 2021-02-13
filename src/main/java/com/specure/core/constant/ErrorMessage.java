@@ -70,4 +70,5 @@ public interface ErrorMessage {
     String QOS_MEASUREMENT_FROM_ON_NET_SERVER = "The attempt to save QoS measurement (uuid =%s) from ON_NET server (id=%s).";
     String UNSUPPORTED_CLIENT_NAME = "Unsupported client name %s";
     String CLIENT_NOT_FOUND = "No client found by id %s.";
+    String NO_OPEN_DATA_SOURCE = "no postgre SQL source of openData";
 }

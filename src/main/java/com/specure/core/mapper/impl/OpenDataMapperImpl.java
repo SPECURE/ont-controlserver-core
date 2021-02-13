@@ -4,7 +4,6 @@ import com.specure.core.enums.NetworkType;
 import com.specure.core.mapper.OpenDataMapper;
 import com.specure.core.model.OpenData;
 import com.specure.core.model.OpenDataExport;
-import com.specure.core.service.impl.OpenDataServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -13,6 +12,8 @@ import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
+
+import static com.specure.core.service.impl.OpenDataServiceImpl.CSV_SEPARATOR;
 
 @Slf4j
 @Component
@@ -46,9 +47,9 @@ public class OpenDataMapperImpl implements OpenDataMapper {
 
     private String getProvider(String networkOperator, String clientProvider) {
         if (networkOperator != null && !networkOperator.isEmpty()) {
-            return networkOperator.replace(OpenDataServiceImpl.CSV_SEPARATOR, ' ');
+            return networkOperator.replace(CSV_SEPARATOR, ' ');
         } else if (clientProvider != null && !clientProvider.isEmpty()) {
-            return clientProvider.replace(OpenDataServiceImpl.CSV_SEPARATOR, ' ');
+            return clientProvider.replace(CSV_SEPARATOR, ' ');
         } else {
             return NA;
         }

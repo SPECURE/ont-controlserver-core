@@ -54,6 +54,7 @@ public class MeasurementServerServiceImplTest {
 
     @Before
     public void setUp() {
+        when(uuidGenerator.generateUUID()).thenReturn(DEFAULT_CLIENT_UUID_GENERATED);
         measurementServerService = new MeasurementServerServiceImpl(measurementServerRepository, measurementServerMapper,
                 providerService, measurementService, jiraApiService, measurementServerConfig, uuidGenerator);
     }

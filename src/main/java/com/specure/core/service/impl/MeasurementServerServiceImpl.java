@@ -155,6 +155,8 @@ public class MeasurementServerServiceImpl implements MeasurementServerService {
 
     @Override
     public void createMeasurementServer(MeasurementServerRequest measurementServerRequest) {
+        if(measurementServerRequest.getMeasurementTypeList() == null) //todo remove after ui fixed
+            measurementServerRequest.setMeasurementTypeList(Collections.emptySet());
         MeasurementServer measurementServer = measurementServerMapper.measurementServerRequestToMeasurementServer(measurementServerRequest);
         Long providerId = measurementServer.getProvider().getId();
         Provider provider;
@@ -170,6 +172,8 @@ public class MeasurementServerServiceImpl implements MeasurementServerService {
 
     @Override
     public void updateMeasurementServer(Long id, MeasurementServerRequest measurementServerRequest) {
+        if(measurementServerRequest.getMeasurementTypeList() == null) //todo remove after ui fixed
+            measurementServerRequest.setMeasurementTypeList(Collections.emptySet());
         MeasurementServer measurementServer = measurementServerMapper.measurementServerRequestToMeasurementServer(measurementServerRequest);
         measurementServer.setId(id);
         if (measurementServerRequest.getProviderId() == null) {

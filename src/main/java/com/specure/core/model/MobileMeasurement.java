@@ -66,6 +66,7 @@ public class MobileMeasurement implements Serializable {
     private Integer lastSequenceNumber;
 
     @Column(name = "network_group_name")
+    @Enumerated(EnumType.STRING)
     private NetworkGroupName networkGroupName;
 
 //    @OneToOne(fetch = FetchType.LAZY)//todo on testRequest

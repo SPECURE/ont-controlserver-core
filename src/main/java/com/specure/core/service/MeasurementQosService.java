@@ -7,4 +7,5 @@ import com.specure.core.response.measurement.qos.response.MeasurementQosParamete
 public interface MeasurementQosService {
     void saveMeasurementQos(MeasurementQosRequest measurementQosRequest);
     MeasurementQosParametersResponse getQosParameters(MeasurementQosParametersRequest measurementQosParametersRequest);
+    public void deleteByOpenUUID(String uuid);
 }

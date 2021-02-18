@@ -23,4 +23,5 @@ public interface MeasurementService {
     Measurement findByOpenTestUuid(String uuid);
     Optional<Measurement> getMeasurementByToken(String token);
     List<Measurement> getLastSuccessfulMeasurementByIds(List<Long> ids);
+    void deleteByOpenUUID(String uuid);
 }

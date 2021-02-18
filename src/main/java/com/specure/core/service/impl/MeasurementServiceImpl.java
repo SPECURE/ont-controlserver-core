@@ -220,5 +220,10 @@ public class MeasurementServiceImpl implements MeasurementService {
         return measurementRepository.findTopByOrderByStatusAndMeasurementServerIdOrderByTime(ids);
     }
 
+    @Override
+    public void deleteByOpenUUID(String uuid) {
+        measurementRepository.deleteByOpenTestUuid(uuid);
+    }
+
 }
 

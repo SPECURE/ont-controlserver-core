@@ -47,4 +47,5 @@ public interface MeasurementRepository extends JpaRepository<Measurement, Long> 
         nativeQuery = true
     )
     List<Measurement> findTopByOrderByStatusAndMeasurementServerIdOrderByTime(List<Long> ids);
+    void deleteByOpenTestUuid(String uuid);
 }

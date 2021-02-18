@@ -2,10 +2,13 @@ package com.specure.core.model;
 
 
 import com.specure.core.enums.MeasurementStatus;
+import com.specure.core.enums.NetworkGroupName;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -15,7 +18,7 @@ import java.time.LocalDateTime;
 @ToString
 @Entity
 @Table(name = "mobile_measurement")
-public class MobileMeasurement {
+public class MobileMeasurement implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,8 +31,9 @@ public class MobileMeasurement {
     @Enumerated(EnumType.STRING)
     private MeasurementStatus status;
 
-    @Column(name = "client_id")
-    private Long clientId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id")
+    private Client client;
 
     @Column(name = "open_test_uuid")
     private String openTestUuid;
@@ -60,4 +64,28 @@ public class MobileMeasurement {
 
     @Column(name = "last_sequence_number")
     private Integer lastSequenceNumber;
+
+    @Column(name = "network_group_name")
+    @Enumerated(EnumType.STRING)
+    private NetworkGroupName networkGroupName;
+
+//    @OneToOne(fetch = FetchType.LAZY)//todo on testRequest
+//    @JoinColumn(
+//            name = "uuid",
+//            referencedColumnName = "test_uuid",
+//            insertable = false, nullable = false, updatable = false
+//    )
+//    private LoopModeSettings loopModeSettings;
+
+    private Integer duration;
+
+    @Column(updatable = false, nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date time;
+
+    @PrePersist
+    protected void preInsert() {
+        this.time = new Date();
+    }
+
 }

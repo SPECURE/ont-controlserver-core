@@ -56,7 +56,7 @@ public class OpenDataServiceImplTest {
         doReturn(openData).when(openDataRepository).getAllByTimeBetweenWithSeparator(eq(from), eq(to), eq(DigitalSeparator.COMMA));
 
 
-        openDataService.getOpenDataMonthlyExport(2020, 10, DEFAULT_OPEN_DATA_FILE_EXTENSION, DigitalSeparator.COMMA);
+        openDataService.getOpenDataMonthlyExport(2020, 10, DEFAULT_OPEN_DATA_FILE_EXTENSION, DigitalSeparator.COMMA, ';');
 
         verify(openDataRepository)
                 .getAllByTimeBetweenWithSeparator(fromCaptor.capture(), toCaptor.capture(), eq(DigitalSeparator.COMMA));
@@ -74,7 +74,7 @@ public class OpenDataServiceImplTest {
         OpenDataExportList<?> openData = new OpenDataExportList<>(data);
         doReturn(openData).when(openDataRepository).getAllByTimeBetweenWithSeparator(eq(from), eq(to), eq(DigitalSeparator.COMMA));
 
-        openDataService.getOpenDataMonthlyExport(2020, 12, DEFAULT_OPEN_DATA_FILE_EXTENSION, DigitalSeparator.COMMA);
+        openDataService.getOpenDataMonthlyExport(2020, 12, DEFAULT_OPEN_DATA_FILE_EXTENSION, DigitalSeparator.COMMA, ';');
 
         verify(openDataRepository)
                 .getAllByTimeBetweenWithSeparator(fromCaptor.capture(), toCaptor.capture(), eq(DigitalSeparator.COMMA));
@@ -88,7 +88,7 @@ public class OpenDataServiceImplTest {
         var listData = new OpenDataExportList<>(data);
         doReturn(listData).when(openDataRepository).getAllOpenDataWithSeparator(DigitalSeparator.COMMA);
 
-        var result = openDataService.getOpenDataFullExport("xml", DigitalSeparator.COMMA);
+        var result = openDataService.getOpenDataFullExport("xml", DigitalSeparator.COMMA, ';');
 
         Assert.assertNotNull(result);
         Assert.assertEquals(HttpStatus.OK, result.getStatusCode());
@@ -99,7 +99,7 @@ public class OpenDataServiceImplTest {
         var listData = new OpenDataExportList<>(data);
         doReturn(listData).when(openDataRepository).getAllOpenDataWithSeparator(DigitalSeparator.COMMA);
 
-        var result = openDataService.getOpenDataFullExport("json", DigitalSeparator.COMMA);
+        var result = openDataService.getOpenDataFullExport("json", DigitalSeparator.COMMA, ';');
 
         Assert.assertNotNull(result);
         Assert.assertEquals(HttpStatus.OK, result.getStatusCode());

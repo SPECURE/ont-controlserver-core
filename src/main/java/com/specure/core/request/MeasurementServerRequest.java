@@ -47,6 +47,6 @@ public class MeasurementServerRequest {
 
     private Date expiration;
 
-    @NotNull
+//    @NotNull //todo remove after ui update
     private Set<MeasurementType> measurementTypeList;
 }

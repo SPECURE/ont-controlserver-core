@@ -13,7 +13,7 @@ import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 
-import static com.specure.core.service.impl.OpenDataServiceImpl.CSV_SEPARATOR;
+import static com.specure.core.service.impl.OpenDataServiceImpl.DEFAULT_CSV_SEPARATOR;
 
 @Slf4j
 @Component
@@ -47,9 +47,9 @@ public class OpenDataMapperImpl implements OpenDataMapper {
 
     private String getProvider(String networkOperator, String clientProvider) {
         if (networkOperator != null && !networkOperator.isEmpty()) {
-            return networkOperator.replace(CSV_SEPARATOR, ' ');
+            return networkOperator.replace(DEFAULT_CSV_SEPARATOR, ' ');
         } else if (clientProvider != null && !clientProvider.isEmpty()) {
-            return clientProvider.replace(CSV_SEPARATOR, ' ');
+            return clientProvider.replace(DEFAULT_CSV_SEPARATOR, ' ');
         } else {
             return NA;
         }

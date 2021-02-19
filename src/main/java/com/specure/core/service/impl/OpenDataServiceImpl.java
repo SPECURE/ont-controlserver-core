@@ -43,7 +43,7 @@ import static com.specure.core.enums.FileExtension.valueOf;
 @Service
 public class OpenDataServiceImpl implements OpenDataService {
 
-    public static final char CSV_SEPARATOR = ';';
+    public static final char DEFAULT_CSV_SEPARATOR = ';';
     private static final String FILENAME_LICENSE = "LICENSE-CC-BY-4.0.txt";
 
     @Value("classpath:license/" + FILENAME_LICENSE)
@@ -57,7 +57,7 @@ public class OpenDataServiceImpl implements OpenDataService {
     private final List<OpenDataInputStreamService> openDataRepositoryList;
 
     @Override
-    public ResponseEntity<Object> getOpenDataMonthlyExport(Integer year, Integer month, String fileExtension, DigitalSeparator digitalSeparator) {
+    public ResponseEntity<Object> getOpenDataMonthlyExport(Integer year, Integer month, String fileExtension, DigitalSeparator digitalSeparator, char listSeparator) {
 
         String filename = String.format(FILENAME_MONTHLY_EXPORT, year, month, fileExtension);
 
@@ -71,7 +71,7 @@ public class OpenDataServiceImpl implements OpenDataService {
         OpenDataExportList<?> data = inputStreamService
                 .getAllByTimeBetweenWithSeparator(Timestamp.valueOf(fromTime), Timestamp.valueOf(toTime), digitalSeparator);
 
-        var inputStream = streamOpenData(data, filename, fileExtension, inputStreamService);
+        var inputStream = streamOpenData(data, filename, fileExtension, inputStreamService, listSeparator);
 
         // return open data
         return ResponseEntity.ok()
@@ -83,13 +83,13 @@ public class OpenDataServiceImpl implements OpenDataService {
     }
 
     @Override
-    public ResponseEntity<Object> getOpenDataFullExport(String fileExtension, DigitalSeparator digitalSeparator) {
+    public ResponseEntity<Object> getOpenDataFullExport(String fileExtension, DigitalSeparator digitalSeparator, char listSeparator) {
 
         String filename = String.format(FILENAME_FULL_EXPORT, fileExtension);
 
         OpenDataInputStreamService inputStreamService = getOpenDataSource();
         OpenDataExportList<?> data = inputStreamService.getAllOpenDataWithSeparator(digitalSeparator);
-        ByteArrayInputStream openDataStream = streamOpenData(data, filename, fileExtension, inputStreamService);
+        ByteArrayInputStream openDataStream = streamOpenData(data, filename, fileExtension, inputStreamService, listSeparator);
 
         // return open data
         return ResponseEntity.ok()
@@ -112,14 +112,14 @@ public class OpenDataServiceImpl implements OpenDataService {
                 .orElseThrow(() -> new RuntimeException(NO_OPEN_DATA_SOURCE));
     }
 
-    private ByteArrayInputStream streamOpenData(OpenDataExportList<?> openDataList, String filename, String fileExtension, OpenDataInputStreamService inputStreamService) {
+    private ByteArrayInputStream streamOpenData(OpenDataExportList<?> openDataList, String filename, String fileExtension, OpenDataInputStreamService inputStreamService, char listSeparator) {
 
         ByteArrayOutputStream zip = new ByteArrayOutputStream();
         ZipOutputStream out = new ZipOutputStream(zip);
 
         try {
             // add open data export file
-            createOpenDataExportFile(openDataList, filename, fileExtension, out, inputStreamService);
+            createOpenDataExportFile(openDataList, filename, fileExtension, out, inputStreamService, listSeparator);
 
             // add license file
             createLicenseFile(out);
@@ -133,7 +133,7 @@ public class OpenDataServiceImpl implements OpenDataService {
         return new ByteArrayInputStream(zip.toByteArray());
     }
 
-    private void createOpenDataExportFile(OpenDataExportList<?> openDataList, String filename, String fileExtension, ZipOutputStream out, OpenDataInputStreamService inputStreamService) throws IOException, JAXBException {
+    private void createOpenDataExportFile(OpenDataExportList<?> openDataList, String filename, String fileExtension, ZipOutputStream out, OpenDataInputStreamService inputStreamService, char listSeparator) throws IOException, JAXBException {
 
         // create new zip entry
         out.putNextEntry(new ZipEntry(filename));
@@ -142,7 +142,7 @@ public class OpenDataServiceImpl implements OpenDataService {
 
         switch (valueOf(fileExtension)) {
             case csv:
-                exportToCSV(openDataList, out, openDataClass);
+                exportToCSV(openDataList, out, openDataClass, listSeparator);
                 break;
             case json:
                 exportToJson(openDataList, out);
@@ -177,7 +177,7 @@ public class OpenDataServiceImpl implements OpenDataService {
         out.write(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(openDataList.getOpenDataExport()));
     }
 
-    private void exportToCSV(OpenDataExportList<?> openDataList, ZipOutputStream out,Class<?> openDataClass) throws IOException {
+    private void exportToCSV(OpenDataExportList<?> openDataList, ZipOutputStream out,Class<?> openDataClass, char listSeparator) throws IOException {
         CsvMapper objectMapper = CsvMapper.builder()
                 .enable(SerializationFeature.INDENT_OUTPUT)
                 .enable(CsvParser.Feature.TRIM_SPACES)
@@ -188,7 +188,7 @@ public class OpenDataServiceImpl implements OpenDataService {
 
         CsvSchema csvSchema = objectMapper
                 .typedSchemaFor(openDataClass)
-                .withColumnSeparator(CSV_SEPARATOR)
+                .withColumnSeparator(listSeparator)
                 .withHeader();
 
         out.write(objectMapper.writerWithDefaultPrettyPrinter().with(csvSchema).writeValueAsBytes(openDataList.getOpenDataExport()));

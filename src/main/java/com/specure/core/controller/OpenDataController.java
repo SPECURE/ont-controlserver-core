@@ -25,18 +25,20 @@ public class OpenDataController {
             @PathVariable @NotNull Integer year,
             @PathVariable @NotNull Integer month,
             @PathVariable @NotNull String fileExtension,
-            @RequestParam(required = false, defaultValue = "COMMA") DigitalSeparator digitalSeparator
+            @RequestParam(required = false, defaultValue = "COMMA") DigitalSeparator digitalSeparator,
+            @RequestParam(required = false, defaultValue = ";") char listSeparator
     ) {
-        return openDataServiceImpl.getOpenDataMonthlyExport(year, month, fileExtension, digitalSeparator);
+        return openDataServiceImpl.getOpenDataMonthlyExport(year, month, fileExtension, digitalSeparator, listSeparator);
     }
 
     @ApiOperation("Get export file of full open data.")
     @GetMapping(value = URIConstants.EXPORT_FULL)
     public ResponseEntity<Object> getFullExportFile(
             @PathVariable @NotNull String fileExtension,
-            @RequestParam(required = false, defaultValue = "COMMA") DigitalSeparator digitalSeparator
+            @RequestParam(required = false, defaultValue = "COMMA") DigitalSeparator digitalSeparator,
+            @RequestParam(required = false, defaultValue = ";") char listSeparator
     ) {
-        return openDataServiceImpl.getOpenDataFullExport(fileExtension, digitalSeparator);
+        return openDataServiceImpl.getOpenDataFullExport(fileExtension, digitalSeparator, listSeparator);
     }
 
 }

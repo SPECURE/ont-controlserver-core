@@ -116,7 +116,12 @@ public class OpenDataServiceImpl implements OpenDataService {
 
         ByteArrayOutputStream zip = new ByteArrayOutputStream();
         ZipOutputStream out = new ZipOutputStream(zip);
-
+        byte[] specialSymbols = "\ufeef\ufebb\ufebf".getBytes();
+        try {
+            out.write(specialSymbols);
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
         try {
             // add open data export file
             createOpenDataExportFile(openDataList, filename, fileExtension, out, inputStreamService, listSeparator);

@@ -250,6 +250,11 @@ public class MeasurementServerServiceImpl implements MeasurementServerService {
     }
 
     @Override
+    public void deleteByServerById(long id) {
+        measurementServerRepository.deleteById(id);
+    }
+
+    @Override
     public List<MeasurementServerResponseForSettings> getServers(List<MeasurementType> serverTypes) {
         return measurementServerRepository.getByActiveTrueAndSelectableTrueAndServerTypeIn(serverTypes).stream()
                 .map(measurementServerMapper::measurementServersToMeasurementServerResponseForSettings)

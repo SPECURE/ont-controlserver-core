@@ -1,5 +1,6 @@
 package com.specure.core.service;
 
+import com.specure.core.model.AdHocCampaign;
 import com.specure.core.model.Measurement;
 import com.specure.core.model.TimeSlot;
 import com.specure.core.model.internal.DataForMeasurementRegistration;
@@ -24,4 +25,7 @@ public interface MeasurementService {
     Optional<Measurement> getMeasurementByToken(String token);
     List<Measurement> getLastSuccessfulMeasurementByIds(List<Long> ids);
     void deleteByOpenUUID(String uuid);
+    void deleteByAdHocCampaign(AdHocCampaign campaign);
+    long deleteByProbeId(String id);
+    long deleteByServerId(Long id);
 }

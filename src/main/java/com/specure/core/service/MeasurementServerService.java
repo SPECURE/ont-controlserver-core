@@ -29,4 +29,6 @@ public interface MeasurementServerService {
     MeasurementServer getMeasurementServerById(long id);
 
     List<MeasurementServerResponseForSettings> getServers(List<MeasurementType> serverTypes);
+
+    void deleteByServerById(long id);
 }

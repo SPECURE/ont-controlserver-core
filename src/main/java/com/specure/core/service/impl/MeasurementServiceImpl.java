@@ -8,6 +8,7 @@ import com.specure.core.enums.Platform;
 import com.specure.core.enums.ServerNetworkType;
 import com.specure.core.exception.MeasurementNotFoundByUuidException;
 import com.specure.core.mapper.MeasurementMapper;
+import com.specure.core.model.AdHocCampaign;
 import com.specure.core.model.Measurement;
 import com.specure.core.model.MeasurementServer;
 import com.specure.core.model.TimeSlot;
@@ -225,5 +226,19 @@ public class MeasurementServiceImpl implements MeasurementService {
         measurementRepository.deleteByOpenTestUuid(uuid);
     }
 
+    @Override
+    public void deleteByAdHocCampaign(AdHocCampaign campaign) {
+        measurementRepository.deleteByAdHocCampaign(campaign);
+    }
+
+    @Override
+    public long deleteByProbeId(String probeId) {
+        return measurementRepository.deleteByDevice(probeId);
+    }
+
+    @Override
+    public long deleteByServerId(Long id) {
+        return measurementRepository.deleteByMeasurementServerId(id);
+    }
 }
 

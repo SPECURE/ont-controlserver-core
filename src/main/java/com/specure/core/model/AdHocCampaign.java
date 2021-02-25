@@ -39,4 +39,6 @@ public class AdHocCampaign extends BaseEntity {
     @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "provider_id")
     private Provider provider;
+
+    private String description;
 }

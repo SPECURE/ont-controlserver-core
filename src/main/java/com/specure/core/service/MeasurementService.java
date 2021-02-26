@@ -6,6 +6,8 @@ import com.specure.core.model.internal.DataForMeasurementRegistration;
 import com.specure.core.request.MeasurementRequest;
 import com.specure.core.response.MeasurementHistoryResponse;
 import com.specure.core.response.MeasurementRegistrationResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.Clock;
 import java.util.List;
@@ -23,4 +25,5 @@ public interface MeasurementService {
     Measurement findByOpenTestUuid(String uuid);
     Optional<Measurement> getMeasurementByToken(String token);
     List<Measurement> getLastSuccessfulMeasurementByIds(List<Long> ids);
+    Page<Measurement> findAll(Pageable pageable);
 }

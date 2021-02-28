@@ -19,15 +19,13 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.*;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TimeZone;
+import java.util.*;
 
 import static com.specure.core.TestConstants.*;
 import static org.junit.Assert.assertEquals;
@@ -55,6 +53,9 @@ public class MeasurementServiceImplTest {
 
     @Captor
     private ArgumentCaptor<Measurement> measurementCaptor;
+
+    @Captor
+    private ArgumentCaptor<Pageable> pageableArgumentCaptor;
 
     @Before
     public void setUp() {
@@ -247,6 +248,22 @@ public class MeasurementServiceImplTest {
 
         assertEquals(slot + 3, timeSlot.getSlot().intValue());
         assertEquals(waitExpected, timeSlot.getTestWait().intValue());
+    }
+    @Test
+    public void findAll_WhenCall_ExpectFindAllFromRepository() {
+        String SORT_FIELD = "time";
+        int startPage = 0;
+        int sizePage = 10;
+        Pageable pageRequest = PageRequest.of(startPage, sizePage, Sort.by(Sort.Order.asc(SORT_FIELD)));
+        Page<Measurement> page = new PageImpl<>(Collections.emptyList());
+
+        when(measurementRepository.findAll(eq(pageRequest))).thenReturn(page);
+        measurementService.findAll(pageRequest);
+
+        verify(measurementRepository).findAll(pageableArgumentCaptor.capture());
+
+        assertEquals(startPage, pageableArgumentCaptor.getValue().getPageNumber());
+        assertEquals(sizePage, pageableArgumentCaptor.getValue().getPageSize());
     }
 
     private MeasurementRequest getMeasurementRequestDefault() {

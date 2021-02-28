@@ -24,6 +24,8 @@ import com.specure.core.utils.HeaderExtrudeUtil;
 import com.specure.core.utils.MeasurementCalculatorUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.net.InetAddress;
@@ -219,6 +221,11 @@ public class MeasurementServiceImpl implements MeasurementService {
     @Override
     public List<Measurement> getLastSuccessfulMeasurementByIds(List<Long> ids) {
         return measurementRepository.findTopByOrderByStatusAndMeasurementServerIdOrderByTime(ids);
+    }
+
+    @Override
+    public Page<Measurement> findAll(Pageable pageable) {
+        return measurementRepository.findAll(pageable);
     }
 
     @Override

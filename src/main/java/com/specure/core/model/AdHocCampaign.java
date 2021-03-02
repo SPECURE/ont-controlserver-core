@@ -32,11 +32,11 @@ public class AdHocCampaign extends BaseEntity {
     private Timestamp finish;
 
     @JsonBackReference
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne()
     @JoinColumn(name = "probe_id")
     private Probe probe;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne()
     @JoinColumn(name = "provider_id")
     private Provider provider;
 

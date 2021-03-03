@@ -193,6 +193,11 @@ public class MeasurementServerServiceImpl implements MeasurementServerService {
     }
 
     @Override
+    public void updateMeasurementServer(MeasurementServer measurementServer) {
+        measurementServerRepository.save(measurementServer);
+    }
+
+    @Override
     public NearestMeasurementServersResponse getNearestServers(ClientLocationRequest clientLocationRequest) {
 
         List<MeasurementServer> all = measurementServerRepository.findAll();
@@ -247,6 +252,11 @@ public class MeasurementServerServiceImpl implements MeasurementServerService {
         }
 
         return description;
+    }
+
+    @Override
+    public void deleteByServerById(long id) {
+        measurementServerRepository.deleteById(id);
     }
 
     @Override

@@ -76,7 +76,7 @@ public class Measurement {
 
     private String serverType;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne()
     @JoinColumn(name = "ad_hoc_campaign_id")
     private AdHocCampaign adHocCampaign;
 

@@ -74,4 +74,8 @@ public class ProviderServiceImpl implements ProviderService {
                 .orElseThrow(() -> new ProviderNotFoundException(id));
     }
 
+    @Override
+    public void deleteById(long id) {
+        providerRepository.deleteById(id);
+    }
 }

@@ -185,4 +185,9 @@ public class MeasurementQosServiceImpl implements MeasurementQosService {
                 .error(Collections.emptyList())
                 .build();
     }
+
+    @Override
+    public void deleteByOpenUUID(String uuid) {
+        measurementQosRepository.deleteByOpenTestUuid(uuid);
+    }
 }

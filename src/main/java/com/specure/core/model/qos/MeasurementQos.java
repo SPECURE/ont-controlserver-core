@@ -29,7 +29,7 @@ public class MeasurementQos {
     private String clientName;
     private String clientLanguage;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne()
     @JoinColumn(name = "ad_hoc_campaign_id")
     private AdHocCampaign adHocCampaign;
 

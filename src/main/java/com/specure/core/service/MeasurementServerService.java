@@ -24,9 +24,13 @@ public interface MeasurementServerService {
 
     void updateMeasurementServer(Long id, MeasurementServerRequest measurementServerRequest);
 
+    void updateMeasurementServer(MeasurementServer measurementServer);
+
     NearestMeasurementServersResponse getNearestServers(ClientLocationRequest clientLocationRequest);
 
     MeasurementServer getMeasurementServerById(long id);
 
     List<MeasurementServerResponseForSettings> getServers(List<MeasurementType> serverTypes);
+
+    void deleteByServerById(long id);
 }

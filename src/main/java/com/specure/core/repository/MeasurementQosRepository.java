@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MeasurementQosRepository extends JpaRepository<MeasurementQos, Long> {
-
+    void deleteByOpenTestUuid(String uuid);
 }

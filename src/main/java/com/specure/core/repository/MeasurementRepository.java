@@ -1,6 +1,7 @@
 package com.specure.core.repository;
 
 import com.specure.core.enums.Platform;
+import com.specure.core.model.AdHocCampaign;
 import com.specure.core.model.Measurement;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -47,4 +48,8 @@ public interface MeasurementRepository extends JpaRepository<Measurement, Long> 
         nativeQuery = true
     )
     List<Measurement> findTopByOrderByStatusAndMeasurementServerIdOrderByTime(List<Long> ids);
+    void deleteByOpenTestUuid(String uuid);
+    void deleteByAdHocCampaign(AdHocCampaign campaignId);
+    long deleteByDevice(String probeId);
+    long deleteByMeasurementServerId(Long serverId);
 }

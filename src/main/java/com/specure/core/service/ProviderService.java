@@ -14,4 +14,5 @@ public interface ProviderService {
     boolean isExist(Long providerId);
     long getDefault();
     Provider getProviderById(long id);
+    void deleteById(long id);
 }

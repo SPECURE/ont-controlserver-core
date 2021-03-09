@@ -158,6 +158,7 @@ public class OpenDataServiceImpl implements OpenDataService {
     }
 
     private void exportToCSV(OpenDataExportList<?> openDataList, ZipOutputStream out,Class<?> openDataClass, char listSeparator) throws IOException {
+        final byte[] bom = new byte[] { (byte) 239, (byte) 187, (byte) 191 };
         CsvMapper objectMapper = CsvMapper.builder()
                 .enable(SerializationFeature.INDENT_OUTPUT)
                 .enable(CsvParser.Feature.TRIM_SPACES)
@@ -171,6 +172,7 @@ public class OpenDataServiceImpl implements OpenDataService {
                 .withColumnSeparator(listSeparator)
                 .withHeader();
 
+        out.write(bom);
         out.write(objectMapper.writerWithDefaultPrettyPrinter().with(csvSchema).writeValueAsBytes(openDataList.getOpenDataExport()));
     }
 

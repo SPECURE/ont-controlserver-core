@@ -7,10 +7,11 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import com.specure.core.constant.OpenDataSource;
 import com.specure.core.enums.DigitalSeparator;
+import com.specure.core.exception.DataStreamSourceException;
 import com.specure.core.exception.UnsupportedFileExtensionException;
 import com.specure.core.model.OpenDataExportList;
+import com.specure.core.model.OpenDataFilter;
 import com.specure.core.service.OpenDataInputStreamService;
 import com.specure.core.service.OpenDataService;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,6 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import static com.specure.core.constant.ErrorMessage.NO_OPEN_DATA_SOURCE;
 import static com.specure.core.enums.FileExtension.valueOf;
 
 @Slf4j
@@ -57,7 +57,7 @@ public class OpenDataServiceImpl implements OpenDataService {
     private final List<OpenDataInputStreamService> openDataRepositoryList;
 
     @Override
-    public ResponseEntity<Object> getOpenDataMonthlyExport(Integer year, Integer month, String fileExtension, DigitalSeparator digitalSeparator, char listSeparator) {
+    public ResponseEntity<Object> getOpenDataMonthlyExport(Integer year, Integer month, String fileExtension, DigitalSeparator digitalSeparator, char listSeparator, OpenDataFilter openDataFilter, String dataSource) {
 
         String filename = String.format(FILENAME_MONTHLY_EXPORT, year, month, fileExtension);
 
@@ -67,9 +67,9 @@ public class OpenDataServiceImpl implements OpenDataService {
         LocalDateTime fromTime = LocalDateTime.of(year, month, 1, 0, 0, 0, 0);
         LocalDateTime toTime = LocalDateTime.of(toYear, toMonth, 1, 0, 0, 0, 0);
 
-        OpenDataInputStreamService inputStreamService = getOpenDataSource();
+        OpenDataInputStreamService inputStreamService = getOpenDataSourceByLabel(dataSource);
         OpenDataExportList<?> data = inputStreamService
-                .getAllByTimeBetweenWithSeparator(Timestamp.valueOf(fromTime), Timestamp.valueOf(toTime), digitalSeparator);
+                .getAllByTimeBetweenWithSeparator(Timestamp.valueOf(fromTime), Timestamp.valueOf(toTime), digitalSeparator, openDataFilter);
 
         var inputStream = streamOpenData(data, filename, fileExtension, inputStreamService, listSeparator);
 
@@ -83,12 +83,12 @@ public class OpenDataServiceImpl implements OpenDataService {
     }
 
     @Override
-    public ResponseEntity<Object> getOpenDataFullExport(String fileExtension, DigitalSeparator digitalSeparator, char listSeparator) {
+    public ResponseEntity<Object> getOpenDataFullExport(String fileExtension, DigitalSeparator digitalSeparator, char listSeparator, OpenDataFilter openDataFilter, String dataSource) {
 
         String filename = String.format(FILENAME_FULL_EXPORT, fileExtension);
 
-        OpenDataInputStreamService inputStreamService = getOpenDataSource();
-        OpenDataExportList<?> data = inputStreamService.getAllOpenDataWithSeparator(digitalSeparator);
+        OpenDataInputStreamService inputStreamService = getOpenDataSourceByLabel(dataSource);
+        OpenDataExportList<?> data = inputStreamService.getAllOpenDataWithSeparator(digitalSeparator, openDataFilter);
         ByteArrayInputStream openDataStream = streamOpenData(data, filename, fileExtension, inputStreamService, listSeparator);
 
         // return open data
@@ -100,44 +100,29 @@ public class OpenDataServiceImpl implements OpenDataService {
                 .body(new InputStreamResource(openDataStream));
     }
 
-
-    public OpenDataInputStreamService getOpenDataSource() {
-        return getOpenDataSourceByLabel(OpenDataSource.DATABASE_MEASUREMENT);
-    }
     protected OpenDataInputStreamService getOpenDataSourceByLabel(String label) {
         return openDataRepositoryList
                 .stream()
                 .filter(repository -> repository.getSourceLabel().equals(label))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException(NO_OPEN_DATA_SOURCE));
+                .orElseThrow(() -> new DataStreamSourceException(label));
     }
 
     private ByteArrayInputStream streamOpenData(OpenDataExportList<?> openDataList, String filename, String fileExtension, OpenDataInputStreamService inputStreamService, char listSeparator) {
-
         ByteArrayOutputStream zip = new ByteArrayOutputStream();
         ZipOutputStream out = new ZipOutputStream(zip);
-
         try {
-            // add open data export file
             createOpenDataExportFile(openDataList, filename, fileExtension, out, inputStreamService, listSeparator);
-
-            // add license file
             createLicenseFile(out);
-
-            // close
             out.close();
         } catch (IOException | JAXBException ex) {
             log.error("An error occurred during exporting data to {}! Exception: {}", fileExtension, ex.getMessage());
         }
-
         return new ByteArrayInputStream(zip.toByteArray());
     }
 
     private void createOpenDataExportFile(OpenDataExportList<?> openDataList, String filename, String fileExtension, ZipOutputStream out, OpenDataInputStreamService inputStreamService, char listSeparator) throws IOException, JAXBException {
-
-        // create new zip entry
         out.putNextEntry(new ZipEntry(filename));
-
         final Class<?> openDataClass = inputStreamService.getOpenDataClass();
 
         switch (valueOf(fileExtension)) {
@@ -147,17 +132,12 @@ public class OpenDataServiceImpl implements OpenDataService {
             case json:
                 exportToJson(openDataList, out);
                 break;
-
             case xml:
                 exportToXml(openDataList, out, openDataClass);
                 break;
-
             default:
                 throw new UnsupportedFileExtensionException(fileExtension);
-
         }
-
-        // flush and close zip entry
         out.flush();
         out.closeEntry();
     }

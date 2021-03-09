@@ -3,6 +3,7 @@ package com.specure.core.controller;
 import com.specure.core.constant.URIConstants;
 import com.specure.core.enums.DigitalSeparator;
 import com.specure.core.service.OpenDataService;
+import com.specure.core.service.impl.OpenDataInputStreamServiceImpl;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,11 @@ public class OpenDataController {
             @RequestParam(required = false, defaultValue = "COMMA") DigitalSeparator digitalSeparator,
             @RequestParam(required = false, defaultValue = ";") char listSeparator
     ) {
-        return openDataServiceImpl.getOpenDataMonthlyExport(year, month, fileExtension, digitalSeparator, listSeparator);
+        return openDataServiceImpl.getOpenDataMonthlyExport(
+                year, month, fileExtension,
+                digitalSeparator, listSeparator, null,
+                OpenDataInputStreamServiceImpl.LABEL_DATA_SOURCE
+        );
     }
 
     @ApiOperation("Get export file of full open data.")
@@ -38,7 +43,10 @@ public class OpenDataController {
             @RequestParam(required = false, defaultValue = "COMMA") DigitalSeparator digitalSeparator,
             @RequestParam(required = false, defaultValue = ";") char listSeparator
     ) {
-        return openDataServiceImpl.getOpenDataFullExport(fileExtension, digitalSeparator, listSeparator);
+        return openDataServiceImpl.getOpenDataFullExport(
+                fileExtension, digitalSeparator, listSeparator, null,
+                OpenDataInputStreamServiceImpl.LABEL_DATA_SOURCE
+        );
     }
 
 }

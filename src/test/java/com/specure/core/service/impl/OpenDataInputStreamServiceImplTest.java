@@ -1,6 +1,5 @@
 package com.specure.core.service.impl;
 
-import com.specure.core.constant.OpenDataSource;
 import com.specure.core.enums.DigitalSeparator;
 import com.specure.core.enums.MeasurementStatus;
 import com.specure.core.mapper.OpenDataMapper;
@@ -18,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.sql.Timestamp;
 import java.util.List;
 
+import static com.specure.core.service.impl.OpenDataInputStreamServiceImpl.LABEL_DATA_SOURCE;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
@@ -49,7 +49,7 @@ public class OpenDataInputStreamServiceImplTest {
         when(openDataMapper.openDataToOpenDataExport(eq(openData)))
                 .thenReturn(openDataExport);
 
-        var result = openDataInputStreamService.getAllByTimeBetweenWithSeparator(start, finish, DigitalSeparator.COMMA);
+        var result = openDataInputStreamService.getAllByTimeBetweenWithSeparator(start, finish, DigitalSeparator.COMMA, null);
 
         Assert.assertEquals(1, result.getOpenDataExport().size());
     }
@@ -64,14 +64,14 @@ public class OpenDataInputStreamServiceImplTest {
         when(openDataMapper.openDataToOpenDataExport(eq(openData)))
                 .thenReturn(openDataExport);
 
-        var result = openDataInputStreamService.getAllOpenDataWithSeparator( DigitalSeparator.COMMA);
+        var result = openDataInputStreamService.getAllOpenDataWithSeparator( DigitalSeparator.COMMA, null);
 
         Assert.assertEquals(1, result.getOpenDataExport().size());
     }
 
     @Test
     public void getSourceLabel_whenInvoke_expectReturnLabel() {
-        Assert.assertEquals(OpenDataSource.DATABASE_MEASUREMENT, openDataInputStreamService.getSourceLabel());
+        Assert.assertEquals(LABEL_DATA_SOURCE, openDataInputStreamService.getSourceLabel());
     }
 
     @Test

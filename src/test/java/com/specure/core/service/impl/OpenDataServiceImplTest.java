@@ -1,6 +1,5 @@
 package com.specure.core.service.impl;
 
-import com.specure.core.constant.OpenDataSource;
 import com.specure.core.enums.DigitalSeparator;
 import com.specure.core.model.OpenDataExport;
 import com.specure.core.model.OpenDataExportList;
@@ -23,6 +22,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import static com.specure.core.TestConstants.DEFAULT_OPEN_DATA_FILE_EXTENSION;
+import static com.specure.core.service.impl.OpenDataInputStreamServiceImpl.LABEL_DATA_SOURCE;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
@@ -38,7 +38,7 @@ public class OpenDataServiceImplTest {
 
     @Before
     public void setUp(){
-        when(openDataRepository.getSourceLabel()).thenReturn(OpenDataSource.DATABASE_MEASUREMENT);
+        when(openDataRepository.getSourceLabel()).thenReturn(LABEL_DATA_SOURCE);
         doReturn(OpenDataExport.class).when(openDataRepository).getOpenDataClass();
         Resource licenseResource = new ClassPathResource("license/LICENSE-CC-BY-4.0.txt");
         openDataService = new OpenDataServiceImpl(List.of(openDataRepository));
@@ -53,13 +53,13 @@ public class OpenDataServiceImplTest {
 
         List<OpenDataExport> data = List.of(OpenDataExport.builder().build());
         OpenDataExportList<?> openData = new OpenDataExportList<>(data);
-        doReturn(openData).when(openDataRepository).getAllByTimeBetweenWithSeparator(eq(from), eq(to), eq(DigitalSeparator.COMMA));
+        doReturn(openData).when(openDataRepository).getAllByTimeBetweenWithSeparator(eq(from), eq(to), eq(DigitalSeparator.COMMA), any());
 
 
-        openDataService.getOpenDataMonthlyExport(2020, 10, DEFAULT_OPEN_DATA_FILE_EXTENSION, DigitalSeparator.COMMA, ';');
+        openDataService.getOpenDataMonthlyExport(2020, 10, DEFAULT_OPEN_DATA_FILE_EXTENSION, DigitalSeparator.COMMA, ';', null, LABEL_DATA_SOURCE);
 
         verify(openDataRepository)
-                .getAllByTimeBetweenWithSeparator(fromCaptor.capture(), toCaptor.capture(), eq(DigitalSeparator.COMMA));
+                .getAllByTimeBetweenWithSeparator(fromCaptor.capture(), toCaptor.capture(), eq(DigitalSeparator.COMMA), any());
 
         Assert.assertEquals(from, fromCaptor.getValue());
         Assert.assertEquals(to, toCaptor.getValue());
@@ -72,12 +72,12 @@ public class OpenDataServiceImplTest {
 
         List<OpenDataExport> data = List.of(OpenDataExport.builder().build());
         OpenDataExportList<?> openData = new OpenDataExportList<>(data);
-        doReturn(openData).when(openDataRepository).getAllByTimeBetweenWithSeparator(eq(from), eq(to), eq(DigitalSeparator.COMMA));
+        doReturn(openData).when(openDataRepository).getAllByTimeBetweenWithSeparator(eq(from), eq(to), eq(DigitalSeparator.COMMA), any());
 
-        openDataService.getOpenDataMonthlyExport(2020, 12, DEFAULT_OPEN_DATA_FILE_EXTENSION, DigitalSeparator.COMMA, ';');
+        openDataService.getOpenDataMonthlyExport(2020, 12, DEFAULT_OPEN_DATA_FILE_EXTENSION, DigitalSeparator.COMMA, ';', null, LABEL_DATA_SOURCE);
 
         verify(openDataRepository)
-                .getAllByTimeBetweenWithSeparator(fromCaptor.capture(), toCaptor.capture(), eq(DigitalSeparator.COMMA));
+                .getAllByTimeBetweenWithSeparator(fromCaptor.capture(), toCaptor.capture(), eq(DigitalSeparator.COMMA), any());
 
         Assert.assertEquals(from, fromCaptor.getValue());
         Assert.assertEquals(to, toCaptor.getValue());
@@ -86,9 +86,11 @@ public class OpenDataServiceImplTest {
     public void getOpenDataFullExport_whenInvokeWithXML_expectCorrectAnswer() {
         List<OpenDataExport> data = List.of(OpenDataExport.builder().build());
         var listData = new OpenDataExportList<>(data);
-        doReturn(listData).when(openDataRepository).getAllOpenDataWithSeparator(DigitalSeparator.COMMA);
+        doReturn(listData)
+                .when(openDataRepository)
+                .getAllOpenDataWithSeparator(eq(DigitalSeparator.COMMA), any());
 
-        var result = openDataService.getOpenDataFullExport("xml", DigitalSeparator.COMMA, ';');
+        var result = openDataService.getOpenDataFullExport("xml", DigitalSeparator.COMMA, ';', null, LABEL_DATA_SOURCE);
 
         Assert.assertNotNull(result);
         Assert.assertEquals(HttpStatus.OK, result.getStatusCode());
@@ -97,9 +99,9 @@ public class OpenDataServiceImplTest {
     public void getOpenDataFullExport_whenInvokeWithJson_expectCorrectAnswer() {
         List<OpenDataExport> data = List.of(OpenDataExport.builder().build());
         var listData = new OpenDataExportList<>(data);
-        doReturn(listData).when(openDataRepository).getAllOpenDataWithSeparator(DigitalSeparator.COMMA);
+        doReturn(listData).when(openDataRepository).getAllOpenDataWithSeparator(eq(DigitalSeparator.COMMA), any());
 
-        var result = openDataService.getOpenDataFullExport("json", DigitalSeparator.COMMA, ';');
+        var result = openDataService.getOpenDataFullExport("json", DigitalSeparator.COMMA, ';', null, LABEL_DATA_SOURCE);
 
         Assert.assertNotNull(result);
         Assert.assertEquals(HttpStatus.OK, result.getStatusCode());

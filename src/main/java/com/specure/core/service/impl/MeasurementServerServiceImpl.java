@@ -83,7 +83,6 @@ public class MeasurementServerServiceImpl implements MeasurementServerService {
         allGetMeasurementServerMethod.start();
 
         Map<Long, Measurement> measurementMap = new HashMap<>();
-        Map<Long, Measurement> successfulMeasurementMap = new HashMap<>();
 
         // 1)
         Profiling findServers = new Profiling();
@@ -108,8 +107,6 @@ public class MeasurementServerServiceImpl implements MeasurementServerService {
         // 2.1
         Profiling findLastSuccessfulMeasurements = new Profiling();
         findLastSuccessfulMeasurements.start();
-        var successfulMeasurements = measurementService.getLastSuccessfulMeasurementByIds(ids);
-        successfulMeasurements.forEach(measurement -> successfulMeasurementMap.put(measurement.getMeasurementServerId(), measurement));
         log.info("GET SERVERS PROFILING: 2) find last successful measurements {}", findLastSuccessfulMeasurements.finishAndGetDuration());
 
         // 3) post processing
@@ -124,13 +121,7 @@ public class MeasurementServerServiceImpl implements MeasurementServerService {
             Long id = server.getId();
             if (measurementMap.containsKey(id)) {
                 var measurement = measurementMap.get(id);
-                boolean flag = (measurement.getSpeedDownload() != null && measurement.getSpeedUpload() != null && measurement.getPingMedian() != null);
                 server.setTimeOfLastMeasurement(measurement.getTime());
-                server.setLastMeasurementSuccess(flag);
-            }
-            if (successfulMeasurementMap.containsKey(id)) {
-                var lastSuccessfulMeasurement = successfulMeasurementMap.get(id);
-                server.setLastSuccessfulMeasurement(lastSuccessfulMeasurement.getTime());
             }
         });
         log.info("GET SERVERS PROFILING: 3) post processing {}", postProcessing.finishAndGetDuration());

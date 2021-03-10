@@ -150,17 +150,11 @@ public class MeasurementServerServiceImplTest {
             Measurement.builder().id(102L).time(timestamp2).measurementServerId(2L).build(),
             Measurement.builder().id(103L).time(timestamp3).measurementServerId(3L).build()
         );
-        List<Measurement> successfulMeasurements = List.of(
-            Measurement.builder().id(102L).time(timestamp4).measurementServerId(2L).build(),
-            Measurement.builder().id(104L).time(timestamp5).measurementServerId(3L).build()
-        );
 
         when(measurementServerRepository.findAll())
             .thenReturn(measurementServerList);
         when(measurementService.findLastMeasurementsForMeasurementServerIds(eq(List.of(1L, 2L, 3L))))
             .thenReturn(measurements);
-        when(measurementService.getLastSuccessfulMeasurementByIds(eq(List.of(1L, 2L, 3L))))
-            .thenReturn(successfulMeasurements);
 
         when(measurementServerMapper.measurementServerToMeasurementServerResponse(measurementServerList.get(0)))
             .thenReturn(MeasurementServerResponse.builder().id(1L).build());
@@ -174,19 +168,15 @@ public class MeasurementServerServiceImplTest {
         assertEquals(3, result.size());
 
         MeasurementServerResponse firstServer = result.get(0);
-        assertTrue(firstServer.isLastMeasurementSuccess());
         assertEquals(timestamp1, firstServer.getTimeOfLastMeasurement());
-        assertNull(firstServer.getLastSuccessfulMeasurement());
 
         MeasurementServerResponse secondServer = result.get(1);
         assertFalse(secondServer.isLastMeasurementSuccess());
         assertEquals(timestamp2, secondServer.getTimeOfLastMeasurement());
-        assertEquals(timestamp4, secondServer.getLastSuccessfulMeasurement());
 
         MeasurementServerResponse thirdServer = result.get(2);
         assertFalse(thirdServer.isLastMeasurementSuccess());
         assertEquals(timestamp3, thirdServer.getTimeOfLastMeasurement());
-        assertEquals(timestamp5, thirdServer.getLastSuccessfulMeasurement());
     }
 
     @Test

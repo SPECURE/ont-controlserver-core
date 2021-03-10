@@ -31,10 +31,5 @@ public class MeasurementServerResponse {
     private String countries;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Timestamp timeOfLastMeasurement;
-
-    private boolean lastMeasurementSuccess;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Timestamp lastSuccessfulMeasurement;
 }

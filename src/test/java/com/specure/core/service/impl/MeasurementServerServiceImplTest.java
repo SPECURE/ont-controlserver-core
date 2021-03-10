@@ -174,18 +174,12 @@ public class MeasurementServerServiceImplTest {
         assertEquals(3, result.size());
 
         MeasurementServerResponse firstServer = result.get(0);
-        assertTrue(firstServer.isLastMeasurementSuccess());
-        assertEquals(timestamp1, firstServer.getTimeOfLastMeasurement());
         assertNull(firstServer.getLastSuccessfulMeasurement());
 
         MeasurementServerResponse secondServer = result.get(1);
-        assertFalse(secondServer.isLastMeasurementSuccess());
-        assertEquals(timestamp2, secondServer.getTimeOfLastMeasurement());
         assertEquals(timestamp4, secondServer.getLastSuccessfulMeasurement());
 
         MeasurementServerResponse thirdServer = result.get(2);
-        assertFalse(thirdServer.isLastMeasurementSuccess());
-        assertEquals(timestamp3, thirdServer.getTimeOfLastMeasurement());
         assertEquals(timestamp5, thirdServer.getLastSuccessfulMeasurement());
     }
 

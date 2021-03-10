@@ -122,12 +122,6 @@ public class MeasurementServerServiceImpl implements MeasurementServerService {
 
         response.forEach(server -> {
             Long id = server.getId();
-            if (measurementMap.containsKey(id)) {
-                var measurement = measurementMap.get(id);
-                boolean flag = (measurement.getSpeedDownload() != null && measurement.getSpeedUpload() != null && measurement.getPingMedian() != null);
-                server.setTimeOfLastMeasurement(measurement.getTime());
-                server.setLastMeasurementSuccess(flag);
-            }
             if (successfulMeasurementMap.containsKey(id)) {
                 var lastSuccessfulMeasurement = successfulMeasurementMap.get(id);
                 server.setLastSuccessfulMeasurement(lastSuccessfulMeasurement.getTime());

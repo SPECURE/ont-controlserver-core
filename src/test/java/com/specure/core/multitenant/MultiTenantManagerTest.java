@@ -26,7 +26,6 @@ public class MultiTenantManagerTest {
 
     @MockBean
     private ConnectionManager connectionManager;
-    @MockBean
     private ElasticIndexTenantConfig elasticIndexTenantConfig;
     @MockBean
     private ClientTenantConfig clientTenantConfig;
@@ -41,6 +40,7 @@ public class MultiTenantManagerTest {
 
     @Before
     public void setUp() {
+
         multiTenantManager = new MultiTenantManager(elasticIndexTenantConfig, connectionManager, clientTenantConfig);
     }
 

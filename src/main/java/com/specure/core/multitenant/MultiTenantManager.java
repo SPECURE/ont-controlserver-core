@@ -4,7 +4,12 @@ import com.specure.core.config.ClientTenantConfig;
 import com.specure.core.config.ElasticIndexTenantConfig;
 import io.micrometer.core.instrument.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.elasticsearch.client.ClientConfiguration;
+import org.springframework.data.elasticsearch.client.RestClients;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +28,7 @@ public class MultiTenantManager {
 
     private final ThreadLocal<String> currentTenant = new ThreadLocal<>();
     private final Map<Object, Object> tenantDataSources = new ConcurrentHashMap<>();
+    private final Map<String, ElasticsearchOperations> tenantElasticsearchOperations = new ConcurrentHashMap<>();
 
     private ConnectionManager connectionManager;
     private AbstractRoutingDataSource multiTenantDataSource;
@@ -62,6 +68,39 @@ public class MultiTenantManager {
         return tenantId;
     }
 
+    public void addTenantElasticsearch(String tenantId) {
+        if (!StringUtils.isBlank(tenantId) && !isTenantElasticExist(tenantId)) {
+            try {
+                RestHighLevelClient client = getElasticClient(tenantId);
+                ElasticsearchOperations elasticsearchOperations = new ElasticsearchRestTemplate(client);
+                tenantElasticsearchOperations.put(tenantId, elasticsearchOperations);
+            } catch (Exception e) {
+                log.error(String.format("Unable to connect elastic ot db %s: %s", tenantId, e));
+            }
+        }
+    }
+
+    private RestHighLevelClient getElasticClient(String tenantId) {
+        ClientConfiguration configuration = getElasticClientConfiguration(elasticIndexTenantConfig
+                .getElasticCredential()
+                .get(tenantId));
+        return RestClients.create(configuration).rest();
+    }
+
+    private ClientConfiguration getElasticClientConfiguration(ElasticIndexTenantConfig.ElasticsearchCredential elasticsearchCredential) {
+        if (Objects.nonNull(elasticsearchCredential.getUsername()) && Objects.nonNull(elasticsearchCredential.getPassword())) {
+            return ClientConfiguration.builder()
+                    .connectedTo(elasticsearchCredential.getHost())
+                    .withBasicAuth(elasticsearchCredential.getUsername(), elasticsearchCredential.getPassword())
+                    .build();
+        } else {
+            return ClientConfiguration.builder()
+                    .connectedTo(elasticsearchCredential.getHost())
+                    .build();
+        }
+    }
+
+
     public void setCurrentTenant(String client) {
         String tenant = clientTenantConfig.getClientTenantMapping().get(client);
 
@@ -77,6 +116,12 @@ public class MultiTenantManager {
         return tenant;
     }
 
+    public ElasticsearchOperations getCurrentTenantElastic() {
+        return Optional.ofNullable(currentTenant.get())
+                .map(tenantElasticsearchOperations::get)
+                .orElse(tenantElasticsearchOperations.get(clientTenantConfig.getDefaultTenant()));
+    }
+
     public String getCurrentTenantBasicIndex() {
         return elasticIndexTenantConfig.getBasicTenantIndexes().get(getCurrentTenant());
     }
@@ -87,5 +132,9 @@ public class MultiTenantManager {
 
     public boolean isTenantExist(String tenantId) {
         return tenantDataSources.containsKey(tenantId);
+    }
+
+    public boolean isTenantElasticExist(String tenantId) {
+        return tenantElasticsearchOperations.containsKey(tenantId);
     }
 }

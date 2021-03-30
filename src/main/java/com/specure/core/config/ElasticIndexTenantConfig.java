@@ -14,6 +14,15 @@ import java.util.Map;
 public class ElasticIndexTenantConfig {
     private Map<String, String> basicTenantIndexes;
     private Map<String, String> basicQosTenantIndexes;
+    private Map<String, ElasticsearchCredential> elasticCredential;
+
+    @Getter
+    @Setter
+    public static class ElasticsearchCredential {
+        private String host;
+        private String username;
+        private String password;
+    }
 }
 
 

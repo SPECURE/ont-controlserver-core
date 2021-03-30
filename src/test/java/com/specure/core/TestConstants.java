@@ -126,4 +126,6 @@ public interface TestConstants {
     String DEFAULT_OPEN_DATA_FILE_EXTENSION = "csv";
     String DEFAULT_OPEN_DATA_YEAR = "2021";
     String DEFAULT_OPEN_DATA_MONTH = "12";
+    String DEFAULT_PASSWORD = "DEFAULT_PASSWORD";
+    String DEFAULT_USERNAME= "DEFAULT_USERNAME";
 }

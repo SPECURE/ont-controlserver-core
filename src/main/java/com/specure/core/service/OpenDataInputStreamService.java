@@ -1,8 +1,8 @@
 package com.specure.core.service;
 
 import com.specure.core.enums.DigitalSeparator;
+import com.specure.core.model.FilterChip;
 import com.specure.core.model.OpenDataExportList;
-import com.specure.core.model.OpenDataFilter;
 
 import java.sql.Timestamp;
 
@@ -11,11 +11,11 @@ public interface OpenDataInputStreamService {
             Timestamp timeStart,
             Timestamp timeEnd,
             DigitalSeparator digitalSeparator,
-            OpenDataFilter openDataFilter
+            FilterChip filterChip
     );
     OpenDataExportList<?> getAllOpenDataWithSeparator(
             DigitalSeparator digitalSeparator,
-            OpenDataFilter openDataFilter
+            FilterChip filterChip
     );
     String getSourceLabel();
     Class<?> getOpenDataClass();

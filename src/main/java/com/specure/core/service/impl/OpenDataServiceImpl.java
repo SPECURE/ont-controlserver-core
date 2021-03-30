@@ -10,8 +10,8 @@ import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.specure.core.enums.DigitalSeparator;
 import com.specure.core.exception.DataStreamSourceException;
 import com.specure.core.exception.UnsupportedFileExtensionException;
+import com.specure.core.model.FilterChip;
 import com.specure.core.model.OpenDataExportList;
-import com.specure.core.model.OpenDataFilter;
 import com.specure.core.service.OpenDataInputStreamService;
 import com.specure.core.service.OpenDataService;
 import lombok.RequiredArgsConstructor;
@@ -57,7 +57,7 @@ public class OpenDataServiceImpl implements OpenDataService {
     private final List<OpenDataInputStreamService> openDataRepositoryList;
 
     @Override
-    public ResponseEntity<Object> getOpenDataMonthlyExport(Integer year, Integer month, String fileExtension, DigitalSeparator digitalSeparator, char listSeparator, OpenDataFilter openDataFilter, String dataSource) {
+    public ResponseEntity<Object> getOpenDataMonthlyExport(Integer year, Integer month, String fileExtension, DigitalSeparator digitalSeparator, char listSeparator, FilterChip filterChip, String dataSource) {
 
         String filename = String.format(FILENAME_MONTHLY_EXPORT, year, month, fileExtension);
 
@@ -69,7 +69,7 @@ public class OpenDataServiceImpl implements OpenDataService {
 
         OpenDataInputStreamService inputStreamService = getOpenDataSourceByLabel(dataSource);
         OpenDataExportList<?> data = inputStreamService
-                .getAllByTimeBetweenWithSeparator(Timestamp.valueOf(fromTime), Timestamp.valueOf(toTime), digitalSeparator, openDataFilter);
+                .getAllByTimeBetweenWithSeparator(Timestamp.valueOf(fromTime), Timestamp.valueOf(toTime), digitalSeparator, filterChip);
 
         var inputStream = streamOpenData(data, filename, fileExtension, inputStreamService, listSeparator);
 
@@ -83,12 +83,12 @@ public class OpenDataServiceImpl implements OpenDataService {
     }
 
     @Override
-    public ResponseEntity<Object> getOpenDataFullExport(String fileExtension, DigitalSeparator digitalSeparator, char listSeparator, OpenDataFilter openDataFilter, String dataSource) {
+    public ResponseEntity<Object> getOpenDataFullExport(String fileExtension, DigitalSeparator digitalSeparator, char listSeparator, FilterChip filterChip, String dataSource) {
 
         String filename = String.format(FILENAME_FULL_EXPORT, fileExtension);
 
         OpenDataInputStreamService inputStreamService = getOpenDataSourceByLabel(dataSource);
-        OpenDataExportList<?> data = inputStreamService.getAllOpenDataWithSeparator(digitalSeparator, openDataFilter);
+        OpenDataExportList<?> data = inputStreamService.getAllOpenDataWithSeparator(digitalSeparator, filterChip);
         ByteArrayInputStream openDataStream = streamOpenData(data, filename, fileExtension, inputStreamService, listSeparator);
 
         // return open data

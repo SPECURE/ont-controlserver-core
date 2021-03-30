@@ -16,9 +16,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 
-import static com.specure.core.TestConstants.DEFAULT_STRING;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static com.specure.core.TestConstants.*;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
@@ -80,4 +79,27 @@ public class MultiTenantManagerTest {
         assertEquals(DEFAULT_STRING, multiTenantManager.getCurrentTenant());
     }
 
+    @Test
+    public void addTenantElasticsearch_whenElasticsearchCredentialHasUsernameAndPassword() {
+        ElasticIndexTenantConfig.ElasticsearchCredential elasticsearchCredential = new ElasticIndexTenantConfig.ElasticsearchCredential();
+        elasticsearchCredential.setHost(DEFAULT_HOST);
+        elasticsearchCredential.setPassword(DEFAULT_PASSWORD);
+        elasticsearchCredential.setUsername(DEFAULT_USERNAME);
+        when(clientTenantConfig.getDefaultTenant()).thenReturn(DEFAULT_STRING);
+        when(elasticIndexTenantConfig.getElasticCredential()).thenReturn(ImmutableMap.of(DEFAULT_STRING, elasticsearchCredential));
+        multiTenantManager.addTenantElasticsearch(DEFAULT_STRING);
+
+        assertNotNull(multiTenantManager.getCurrentTenantElastic());
+    }
+
+    @Test
+    public void addTenantElasticsearch_whenElasticsearchCredentialHasNotUsernameAndPassword() {
+        ElasticIndexTenantConfig.ElasticsearchCredential elasticsearchCredential = new ElasticIndexTenantConfig.ElasticsearchCredential();
+        elasticsearchCredential.setHost(DEFAULT_HOST);
+        when(clientTenantConfig.getDefaultTenant()).thenReturn(DEFAULT_STRING);
+        when(elasticIndexTenantConfig.getElasticCredential()).thenReturn(ImmutableMap.of(DEFAULT_STRING, elasticsearchCredential));
+        multiTenantManager.addTenantElasticsearch(DEFAULT_STRING);
+
+        assertNotNull(multiTenantManager.getCurrentTenantElastic());
+    }
 }

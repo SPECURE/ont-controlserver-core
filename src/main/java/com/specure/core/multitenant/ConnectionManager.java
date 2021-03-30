@@ -30,7 +30,7 @@ public class ConnectionManager {
         config.setMinimumIdle(dataSourceProperties.getMinIdle());
         config.setMaximumPoolSize(dataSourceProperties.getPoolSize());
         config.setDriverClassName(dataSourceProperties.getDriverClassName());
-        config.setJdbcUrl(String.format(dataSourceProperties.getUrl(), clientTenantConfig.getClientTenantMapping().get(tenantId)));
+        config.setJdbcUrl(clientTenantConfig.getClientTenantMapping().get(tenantId));
         config.setUsername(dataSourceProperties.getUsername());
         config.setPassword(dataSourceProperties.getPassword());
         return new HikariDataSource(config);

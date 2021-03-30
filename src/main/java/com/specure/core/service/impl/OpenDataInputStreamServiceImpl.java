@@ -3,9 +3,9 @@ package com.specure.core.service.impl;
 import com.specure.core.enums.DigitalSeparator;
 import com.specure.core.enums.MeasurementStatus;
 import com.specure.core.mapper.OpenDataMapper;
+import com.specure.core.model.FilterChip;
 import com.specure.core.model.OpenDataExport;
 import com.specure.core.model.OpenDataExportList;
-import com.specure.core.model.OpenDataFilter;
 import com.specure.core.repository.OpenDataRepository;
 import com.specure.core.service.OpenDataInputStreamService;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class OpenDataInputStreamServiceImpl implements OpenDataInputStreamServic
             Timestamp timeStart,
             Timestamp timeEnd,
             DigitalSeparator digitalSeparator,
-            OpenDataFilter openDataFilter
+            FilterChip filterChip
     ) {
 
         var data =  openDataRepository
@@ -46,7 +46,7 @@ public class OpenDataInputStreamServiceImpl implements OpenDataInputStreamServic
     @Override
     public OpenDataExportList<OpenDataExport> getAllOpenDataWithSeparator(
             DigitalSeparator digitalSeparator,
-            OpenDataFilter openDataFilter
+            FilterChip filterChip
     ) {
         var data =  openDataRepository.findAllByStatus(MeasurementStatus.FINISHED).stream()
                 .map(openDataMapper::openDataToOpenDataExport)

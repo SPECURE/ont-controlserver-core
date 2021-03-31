@@ -93,6 +93,19 @@ public class MeasurementServerControllerTest {
     }
 
     @Test
+    public void measurementServerController_WhenCallCreateNewWithBadCharactersInName_Expect4xx() throws Exception {
+        MeasurementServerRequest measurementServerRequest = getDefaultMeasurementServerRequest();
+        measurementServerRequest.setName("bad server name +");
+        mockMvc
+                .perform(MockMvcRequestBuilders.post(URIConstants.MEASUREMENT_SERVER)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtils.convertObjectToJsonBytes(measurementServerRequest))
+                )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void measurementServerController_WhenCallCreateNewWithNotExistProvider_ExpectBadRequest() throws Exception {
         MeasurementServerRequest measurementServerRequest = getDefaultMeasurementServerRequest();
         doThrow(new ProviderNotFoundByIdException(DEFAULT_ID))

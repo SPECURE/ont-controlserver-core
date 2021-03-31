@@ -66,6 +66,16 @@ public class ProviderControllerTest {
     }
 
     @Test
+    public void createProvider_whenCallWithSpecialSymbolInProvider_Expect4xx() throws Exception {
+        ProviderRequest providerRequest = getDefaultProviderRequest();
+        providerRequest.setName("meli's wrong provider name");
+        mockMvc.perform(MockMvcRequestBuilders.post(URIConstants.PROVIDERS)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(TestUtils.convertObjectToJsonBytes(providerRequest))
+        ).andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void updateProvider_whenCall_ExpectCorrectResponse() throws Exception {
         ProviderRequest providerRequest = getDefaultProviderRequest();
         mockMvc.perform(MockMvcRequestBuilders.put(URIConstants.PROVIDERS)

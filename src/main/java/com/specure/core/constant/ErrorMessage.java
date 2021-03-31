@@ -73,4 +73,5 @@ public interface ErrorMessage {
     String CLIENT_NOT_FOUND = "No client found by id %s.";
     String NO_OPEN_DATA_SOURCE = "no postgre SQL source of openData";
     String DATA_STREAM_SOURCE = "there was not found stream data source with label '%s' pls create proper spring component.";
+    String ADVERTISED_NAME_CHARS_REQUIRED = "Should contain a-z A-Z 0-9 () underscore, hyphen, space.";
 }

@@ -30,18 +30,19 @@ public class ConnectionManager {
         config.setMinimumIdle(dataSourceProperties.getMinIdle());
         config.setMaximumPoolSize(dataSourceProperties.getPoolSize());
         config.setDriverClassName(dataSourceProperties.getDriverClassName());
-        config.setJdbcUrl(String.format(dataSourceProperties.getUrl(), clientTenantConfig.getClientTenantMapping().get(tenantId)));
-        config.setUsername(dataSourceProperties.getUsername());
-        config.setPassword(dataSourceProperties.getPassword());
+        config.setJdbcUrl(clientTenantConfig.getClientTenantMapping().get(tenantId).getUrl());
+        config.setUsername(clientTenantConfig.getClientTenantMapping().get(tenantId).getUsername());
+        config.setPassword(clientTenantConfig.getClientTenantMapping().get(tenantId).getPassword());
         return new HikariDataSource(config);
     }
 
     public DriverManagerDataSource buildDefaultDataSource() {
         DriverManagerDataSource defaultDataSource = new DriverManagerDataSource();
         defaultDataSource.setDriverClassName(dataSourceProperties.getDriverClassName());
-        defaultDataSource.setUrl(String.format(dataSourceProperties.getUrl(), clientTenantConfig.getClientTenantMapping().values().iterator().next()));
-        defaultDataSource.setUsername(dataSourceProperties.getUsername());
-        defaultDataSource.setPassword(dataSourceProperties.getPassword());
+        ClientTenantConfig.DatasourceClientCredential datasourceClientCredential = clientTenantConfig.getClientTenantMapping().get(clientTenantConfig.getDefaultTenant());
+        defaultDataSource.setUrl(datasourceClientCredential.getUrl());
+        defaultDataSource.setUsername(datasourceClientCredential.getUsername());
+        defaultDataSource.setPassword(datasourceClientCredential.getPassword());
         return defaultDataSource;
     }
 

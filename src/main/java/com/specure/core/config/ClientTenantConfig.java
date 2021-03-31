@@ -12,8 +12,16 @@ import java.util.Map;
 @Configuration
 @ConfigurationProperties("client-tenant")
 public class ClientTenantConfig {
-    private Map<String, String> clientTenantMapping;
+    private Map<String, DatasourceClientCredential> clientTenantMapping;
     private String defaultTenant;
+
+    @Getter
+    @Setter
+    public static class DatasourceClientCredential {
+        private String url;
+        private String username;
+        private String password;
+    }
 }
 
 

@@ -56,7 +56,7 @@ public class MultiTenantManagerTest {
     @Test
     public void setCurrentTenant_correctTenant_set() throws SQLException {
         when(clientTenantConfig.getClientTenantMapping()).thenReturn(
-                ImmutableMap.of(DEFAULT_STRING, DEFAULT_STRING));
+                ImmutableMap.of(DEFAULT_STRING, getDatasourceClientCredential()));
         when(connectionManager.buildDefaultDataSource()).thenReturn(driverManagerDataSource);
         when(connectionManager.buildDataSource(DEFAULT_STRING)).thenReturn(dataSource);
         when(connectionManager.checkConnection(dataSource)).thenReturn(connection);
@@ -101,5 +101,9 @@ public class MultiTenantManagerTest {
         multiTenantManager.addTenantElasticsearch(DEFAULT_STRING);
 
         assertNotNull(multiTenantManager.getCurrentTenantElastic());
+    }
+
+    private ClientTenantConfig.DatasourceClientCredential getDatasourceClientCredential() {
+        return new ClientTenantConfig.DatasourceClientCredential();
     }
 }

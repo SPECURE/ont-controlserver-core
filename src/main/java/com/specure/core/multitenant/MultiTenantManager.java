@@ -102,7 +102,7 @@ public class MultiTenantManager {
 
 
     public void setCurrentTenant(String client) {
-        String tenant = clientTenantConfig.getClientTenantMapping().get(client);
+        ClientTenantConfig.DatasourceClientCredential tenant = clientTenantConfig.getClientTenantMapping().get(client);
 
         if (Objects.isNull(tenant) || !tenantDataSources.containsKey(client)) {
             client = clientTenantConfig.getDefaultTenant();

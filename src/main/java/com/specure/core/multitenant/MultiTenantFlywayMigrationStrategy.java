@@ -17,15 +17,15 @@ public class MultiTenantFlywayMigrationStrategy implements FlywayMigrationStrate
     @Override
     public void migrate(Flyway flyway) {
         clientTenantConfig.getClientTenantMapping().values().iterator()
-                .forEachRemaining(dbName ->
+                .forEachRemaining(datasourceClientCredential ->
                         Flyway.configure()
                                 .validateOnMigrate(false)
                                 .table("_SCHEMA_VERSION")
                                 .baselineOnMigrate(true)
                                 .outOfOrder(false)
-                                .dataSource(String.format(dataSourceConfig.getUrl(), dbName),
-                                        dataSourceConfig.getUsername(),
-                                        dataSourceConfig.getPassword())
+                                .dataSource(datasourceClientCredential.getUrl(),
+                                        datasourceClientCredential.getUsername(),
+                                        datasourceClientCredential.getPassword())
                                 .load()
                                 .migrate());
     }

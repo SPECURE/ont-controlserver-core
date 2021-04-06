@@ -22,6 +22,7 @@ import com.specure.core.service.UserAgentExtractService;
 import com.specure.core.service.digger.DiggerService;
 import com.specure.core.utils.HeaderExtrudeUtil;
 import com.specure.core.utils.MeasurementCalculatorUtil;
+import com.specure.core.utils.profiling.Profiling;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -67,9 +68,13 @@ public class MeasurementServiceImpl implements MeasurementService {
     @Override
     public Measurement partialUpdateMeasurementFromProbeResult(MeasurementRequest measurementRequest) {
         Measurement afterMeasure = measurementMapper.measurementRequestToMeasurement(measurementRequest);
+
+        Profiling findByTokenProfiling = new Profiling();
+        findByTokenProfiling.start();
         var registeredMeasurement = measurementRepository
                 .findByToken(afterMeasure.getToken())
                 .orElseThrow(() -> new MeasurementNotFoundByUuidException(afterMeasure.getToken()));
+        log.info("profiling: findByToken {} ", findByTokenProfiling.finishAndGetDuration());
 
         Long id = registeredMeasurement.getId();
 
@@ -98,7 +103,12 @@ public class MeasurementServiceImpl implements MeasurementService {
         if (afterMeasure.getSpeedDetail() != null) {
             afterMeasure.getSpeedDetail().forEach(speedDetail -> speedDetail.setMeasurement(afterMeasure));
         }
+
+        Profiling saveToDbProfiling = new Profiling();
+        saveToDbProfiling.start();
         measurementRepository.save(afterMeasure);
+        log.info("profiling: save to DB {} ", saveToDbProfiling.finishAndGetDuration());
+
         return afterMeasure;
     }
 

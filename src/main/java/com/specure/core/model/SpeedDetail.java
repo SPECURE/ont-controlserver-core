@@ -6,6 +6,8 @@ import lombok.*;
 
 import javax.persistence.*;
 
+import static javax.persistence.GenerationType.SEQUENCE;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -14,8 +16,10 @@ import javax.persistence.*;
 @Setter
 @Entity
 public class SpeedDetail {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = SEQUENCE, generator = "seqGenSpeedDetail")
+    @SequenceGenerator(name = "seqGenSpeedDetail", sequenceName = "seqSpeedDetail", initialValue = 500000000)
     private Long id;
 
     @ManyToOne

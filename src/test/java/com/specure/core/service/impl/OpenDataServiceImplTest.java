@@ -46,10 +46,10 @@ public class OpenDataServiceImplTest {
     }
 
     @Test
-    public void getOpenDataMonthlyExport_whenInvokeWithNotLastMonth_expectNextMonthThisYear() {
+    public void getOpenDataMonthlyExport_whenInvokeWithNotLastMonth_expectLastDayOfMonth() {
 
         Timestamp from = Timestamp.valueOf("2020-10-01 00:00:00.0");
-        Timestamp to = Timestamp.valueOf("2020-11-01 00:00:00.0");
+        Timestamp to = Timestamp.valueOf("2020-10-31 00:00:00.0");
 
         List<OpenDataExport> data = List.of(OpenDataExport.builder().build());
         OpenDataExportList<?> openData = new OpenDataExportList<>(data);
@@ -65,10 +65,10 @@ public class OpenDataServiceImplTest {
         Assert.assertEquals(to, toCaptor.getValue());
     }
     @Test
-    public void getOpenDataMonthlyExport_whenInvokeWithLastMonth_expectFirstMonthNextYear() {
+    public void getOpenDataMonthlyExport_whenInvokeWithLastMonth_expectLastDayOfYear() {
 
         Timestamp from = Timestamp.valueOf("2020-12-01 00:00:00.0");
-        Timestamp to = Timestamp.valueOf("2021-01-01 00:00:00.0");
+        Timestamp to = Timestamp.valueOf("2020-12-31 00:00:00.0");
 
         List<OpenDataExport> data = List.of(OpenDataExport.builder().build());
         OpenDataExportList<?> openData = new OpenDataExportList<>(data);

@@ -37,6 +37,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import static com.specure.core.enums.FileExtension.valueOf;
+import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -61,11 +62,9 @@ public class OpenDataServiceImpl implements OpenDataService {
 
         String filename = String.format(FILENAME_MONTHLY_EXPORT, year, month, fileExtension);
 
-        int toYear = (month == 12) ? year + 1 : year;
-        int toMonth = (month == 12) ? 1 : month + 1;
-
         LocalDateTime fromTime = LocalDateTime.of(year, month, 1, 0, 0, 0, 0);
-        LocalDateTime toTime = LocalDateTime.of(toYear, toMonth, 1, 0, 0, 0, 0);
+        LocalDateTime toTime = fromTime.with(lastDayOfMonth());
+
 
         OpenDataInputStreamService inputStreamService = getOpenDataSourceByLabel(dataSource);
         OpenDataExportList<?> data = inputStreamService
